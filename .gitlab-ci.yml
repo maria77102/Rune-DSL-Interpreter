@@ -12,7 +12,7 @@ test:
   image: maven:3.8-openjdk-17
   stage: test
   script:
-    - mvn test -Dtest=com.regnosys.rosetta.interpreternew/* -Dsurefire.failIfNoSpecifiedTests=false
+    - mvn test -Dtest="com/regnosys/rosetta/interpreternew/*.java" -Dsurefire.failIfNoSpecifiedTests=false
 
 
 # java-build:
