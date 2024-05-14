@@ -1,6 +1,6 @@
 stages:
-  - test
   - build
+  - test
 
 build:
   image: maven:3.8-openjdk-17
@@ -12,7 +12,10 @@ test:
   image: maven:3.8-openjdk-17
   stage: test
   script:
-    - mvn test -Dtest="com/regnosys/rosetta/interpreternew/*.java" -Dsurefire.failIfNoSpecifiedTests=false
+    - mvn test -Dtest="/com.regnosys.rosetta.tests/src/test/java/com/regnosys/rosetta/interpreternew/*.java" -Dsurefire.failIfNoSpecifiedTests=false
+
+
+    
 
 
 # java-build:
