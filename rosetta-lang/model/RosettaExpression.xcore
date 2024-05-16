@@ -28,6 +28,7 @@ interface InterpreterVisitor {
 	op RosettaInterpreterValue interp (RosettaIntLiteral exp)
 	op RosettaInterpreterValue interp (RosettaPatternLiteral exp)
 	op RosettaInterpreterValue interp (ListLiteral exp)
+	op RosettaInterpreterValue interp (ArithmeticOperation exp)
 }
 
 interface RosettaExpression {
@@ -198,6 +199,8 @@ class ConstructorKeyValuePair {
 
 interface RosettaOperation extends RosettaExpression {
 	String operator
+	
+	
 }
 /**
  * Binary operations
@@ -228,6 +231,11 @@ interface RosettaBinaryOperation extends RosettaOperation, HasGeneratedInput {
 }
 
 class ArithmeticOperation extends RosettaBinaryOperation {
+	
+	op RosettaInterpreterValue accept(InterpreterVisitor v) {
+		v.interp(this)
+	}
+	
 }
 
 class LogicalOperation extends RosettaBinaryOperation {
