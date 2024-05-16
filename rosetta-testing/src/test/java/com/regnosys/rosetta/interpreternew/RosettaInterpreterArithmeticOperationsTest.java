@@ -27,6 +27,7 @@ import com.regnosys.rosetta.rosetta.expression.RosettaInterpreterValue;
 import com.regnosys.rosetta.rosetta.expression.impl.ExpressionFactoryImpl;
 import com.regnosys.rosetta.tests.RosettaInjectorProvider;
 import com.regnosys.rosetta.tests.util.ExpressionParser;
+import com.rosetta.model.lib.RosettaNumber;
 
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RosettaInjectorProvider.class)
@@ -47,28 +48,28 @@ public class RosettaInterpreterArithmeticOperationsTest {
 	public void PlusTest() {
 		RosettaExpression expr = parser.parseExpression("1+2");
 		RosettaInterpreterValue val = interpreter.interp(expr);
-		assertEquals(BigInteger.valueOf(3), ((RosettaInterpreterIntegerValue)val).getValue());
+		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(3)), ((RosettaInterpreterNumberValue)val).getValue());
 	}
 
 	@Test
 	public void MinusTest() {
 		RosettaExpression expr = parser.parseExpression("1-2");
 		RosettaInterpreterValue val = interpreter.interp(expr);
-		assertEquals(BigInteger.valueOf(-1), ((RosettaInterpreterIntegerValue)val).getValue());
+		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(-1)), ((RosettaInterpreterNumberValue)val).getValue());
 	}
 	
 	@Test
 	public void MultiplyTest() {
 		RosettaExpression expr = parser.parseExpression("5*2");
 		RosettaInterpreterValue val = interpreter.interp(expr);
-		assertEquals(BigInteger.valueOf(10), ((RosettaInterpreterIntegerValue)val).getValue());
+		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(10)), ((RosettaInterpreterNumberValue)val).getValue());
 	}
 	
 	@Test
 	public void DivideTest() {
 		RosettaExpression expr = parser.parseExpression("6/2");
 		RosettaInterpreterValue val = interpreter.interp(expr);
-		assertEquals(BigInteger.valueOf(3), ((RosettaInterpreterIntegerValue)val).getValue());
+		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(3)), ((RosettaInterpreterNumberValue)val).getValue());
 	}
 
 

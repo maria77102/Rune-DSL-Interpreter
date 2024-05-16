@@ -3,15 +3,22 @@ package com.regnosys.rosetta.interpreternew.values;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import com.rosetta.model.lib.RosettaNumber;
+
 public class RosettaInterpreterNumberValue extends RosettaInterpreterBaseValue {
-	private BigDecimal value;
+	private RosettaNumber value;
 	
 	public RosettaInterpreterNumberValue(BigDecimal value) {
+		super();
+		this.value = RosettaNumber.valueOf(value);
+	}
+	
+	public RosettaInterpreterNumberValue(RosettaNumber value) {
 		super();
 		this.value = value;
 	}
 	
-	public BigDecimal getValue() { return value; }
+	public RosettaNumber getValue() { return value; }
 
 	@Override
 	public int hashCode() {
