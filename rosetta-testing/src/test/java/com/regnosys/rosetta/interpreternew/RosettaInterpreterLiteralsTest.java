@@ -26,6 +26,7 @@ import com.regnosys.rosetta.rosetta.expression.RosettaInterpreterValue;
 import com.regnosys.rosetta.rosetta.expression.impl.ExpressionFactoryImpl;
 import com.regnosys.rosetta.tests.RosettaInjectorProvider;
 import com.regnosys.rosetta.tests.util.ExpressionParser;
+import com.rosetta.model.lib.RosettaNumber;
 
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RosettaInjectorProvider.class)
@@ -72,7 +73,7 @@ public class RosettaInterpreterLiteralsTest {
 	public void NumberTest() {
 		RosettaExpression expr = parser.parseExpression("5.5");
 		RosettaInterpreterValue val = interpreter.interp(expr);
-		assertEquals(BigDecimal.valueOf(5.5), ((RosettaInterpreterNumberValue)val).getValue());
+		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(5.5)), ((RosettaInterpreterNumberValue)val).getValue());
 	}
 	
 	@Test
