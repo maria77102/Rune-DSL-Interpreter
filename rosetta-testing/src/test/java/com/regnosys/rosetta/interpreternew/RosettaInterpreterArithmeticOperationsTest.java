@@ -15,8 +15,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterBooleanValue;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterError;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterIntegerValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterNumberValue;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterStringValue;
 import com.regnosys.rosetta.rosetta.expression.ArithmeticOperation;
 import com.regnosys.rosetta.rosetta.expression.ExpressionFactory;
 import com.regnosys.rosetta.rosetta.expression.LogicalOperation;
@@ -36,7 +39,8 @@ public class RosettaInterpreterArithmeticOperationsTest {
 	private ExpressionParser parser;
 	@Inject
 	RosettaInterpreterNew interpreter;
-	
+
+	@SuppressWarnings("unused")
 	private ExpressionFactory eFactory;
 	
 	@BeforeEach
@@ -72,5 +76,26 @@ public class RosettaInterpreterArithmeticOperationsTest {
 		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(3)), ((RosettaInterpreterNumberValue)val).getValue());
 	}
 
-
+	@Test
+	public void StringConcatenationTest() {
+		RosettaExpression expr = parser.parseExpression("\"Hello \" + \"World\"");
+		RosettaInterpreterValue val = interpreter.interp(expr);
+		assertEquals("Hello World", ((RosettaInterpreterStringValue)val).getValue());
+	}
+	
+	@Test
+	public void StringConcatenationErrorTest() {
+		RosettaExpression expr = parser.parseExpression("\"Hello \" - \"World\"");
+		RosettaInterpreterValue val = interpreter.interp(expr);
+		assertEquals("The terms are strings but the operation is not concatenation: not implemented", 
+				((RosettaInterpreterErrorValue)val).getErrors().get(0).getMessage());
+	}
+	
+	@Test
+	public void WrongTypeTest() {
+		RosettaExpression expr = parser.parseExpression("True - \"World\"");
+		RosettaInterpreterValue val = interpreter.interp(expr);
+		assertEquals("Arithmetic Operation: Leftside is not of type Number/String", 
+				((RosettaInterpreterErrorValue)val).getErrors().get(0).getMessage());
+	}
 }
