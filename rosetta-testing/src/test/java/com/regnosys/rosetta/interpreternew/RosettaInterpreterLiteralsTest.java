@@ -20,13 +20,13 @@ import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterListValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterNumberValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterStringValue;
 import com.regnosys.rosetta.rosetta.expression.ExpressionFactory;
-import com.regnosys.rosetta.rosetta.expression.ListLiteral;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
-import com.regnosys.rosetta.rosetta.expression.RosettaInterpreterValue;
+import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
 import com.regnosys.rosetta.rosetta.expression.impl.ExpressionFactoryImpl;
 import com.regnosys.rosetta.tests.RosettaInjectorProvider;
 import com.regnosys.rosetta.tests.util.ExpressionParser;
 import com.rosetta.model.lib.RosettaNumber;
+import com.regnosys.rosetta.tests.util.ExpressionValidationHelper;
 
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RosettaInjectorProvider.class)
@@ -35,49 +35,94 @@ public class RosettaInterpreterLiteralsTest {
 	private ExpressionParser parser;
 	@Inject
 	RosettaInterpreterNew interpreter;
+	@Inject
+	private ExpressionValidationHelper validation;
 	
-	private ExpressionFactory eFactory;
+	@SuppressWarnings("unused")
+	private ExpressionFactory exFactory;
 	
 	@BeforeEach
 	public void setup() {
-		eFactory = ExpressionFactoryImpl.init();
+		exFactory = ExpressionFactoryImpl.init();
 	}
 	
 	@Test
-	public void BooleanTest() {
+	public void booleanTest() {
 		RosettaExpression expr = parser.parseExpression("True");
 		RosettaInterpreterValue val = interpreter.interp(expr);
 		assertEquals(true, ((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	 
 	@Test
-	public void ListTest() {
+	public void listTest() {
 		RosettaExpression expr = parser.parseExpression("[1,2]");
+		validation.assertNoIssues(expr);
 		RosettaInterpreterValue val = interpreter.interp(expr);
 		RosettaInterpreterListValue expected = 
 				new RosettaInterpreterListValue(List.of(
-						new RosettaInterpreterIntegerValue(BigInteger.valueOf(1)), 
-						new RosettaInterpreterIntegerValue(BigInteger.valueOf(2))));
-		assertTrue(expected.equals(val));
+						new RosettaInterpreterIntegerValue(
+								BigInteger.valueOf(1)), 
+						new RosettaInterpreterIntegerValue(
+								BigInteger.valueOf(2))));
+		assertEquals(expected, val);
 		
 	}
 	
 	@Test
-	public void IntTest() {
-		RosettaExpression expr = parser.parseExpression("5");
+	public void nestedListTest() {
+		RosettaExpression expr = parser.parseExpression("[1,[2,3]]");
+		validation.assertNoIssues(expr);
 		RosettaInterpreterValue val = interpreter.interp(expr);
-		assertEquals(BigInteger.valueOf(5), ((RosettaInterpreterIntegerValue)val).getValue());
+		RosettaInterpreterListValue expected = 
+				new RosettaInterpreterListValue(List.of(
+						new RosettaInterpreterIntegerValue(
+								BigInteger.valueOf(1)), 
+						new RosettaInterpreterIntegerValue(
+								BigInteger.valueOf(2)),
+						new RosettaInterpreterIntegerValue(
+								BigInteger.valueOf(3))));
+		assertEquals(expected, val);
+		
 	}
 	
 	@Test
-	public void NumberTest() {
+	public void veryNestedListTest() {
+		RosettaExpression expr = parser.parseExpression("[1,[2,[3, [4, [5]]]]]");
+		validation.assertNoIssues(expr);
+		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterListValue expected = 
+				new RosettaInterpreterListValue(List.of(
+						new RosettaInterpreterIntegerValue(
+								BigInteger.valueOf(1)), 
+						new RosettaInterpreterIntegerValue(
+								BigInteger.valueOf(2)),
+						new RosettaInterpreterIntegerValue(
+								BigInteger.valueOf(3)),
+						new RosettaInterpreterIntegerValue(
+								BigInteger.valueOf(4)),
+						new RosettaInterpreterIntegerValue(
+								BigInteger.valueOf(5))));
+		assertEquals(expected, val);
+		
+	}
+	
+	@Test
+	public void intTest() {
+		RosettaExpression expr = parser.parseExpression("5");
+		RosettaInterpreterValue val = interpreter.interp(expr);
+		assertEquals(BigInteger.valueOf(5),
+				((RosettaInterpreterIntegerValue)val).getValue());
+	}
+	
+	@Test
+	public void numberTest() {
 		RosettaExpression expr = parser.parseExpression("5.5");
 		RosettaInterpreterValue val = interpreter.interp(expr);
 		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(5.5)), ((RosettaInterpreterNumberValue)val).getValue());
 	}
 	
 	@Test
-	public void StringTest() {
+	public void stringTest() {
 		RosettaExpression expr = parser.parseExpression("\"hello\"");
 		RosettaInterpreterValue val = interpreter.interp(expr);
 		assertEquals("hello", ((RosettaInterpreterStringValue)val).getValue());

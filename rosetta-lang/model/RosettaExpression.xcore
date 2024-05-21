@@ -16,20 +16,9 @@ import com.regnosys.rosetta.rosetta.RosettaMapTestExpression
 import com.regnosys.rosetta.rosetta.RosettaTyped
 import com.regnosys.rosetta.rosetta.simple.Attribute
 import org.eclipse.emf.common.util.BasicEList
+import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue
+import com.regnosys.rosetta.rosetta.interpreter.InterpreterVisitor
 
-abstract class RosettaInterpreterValue {
-	
-}
-
-interface InterpreterVisitor {
-	op RosettaInterpreterValue interp (RosettaBooleanLiteral exp)
-	op RosettaInterpreterValue interp (RosettaStringLiteral exp)
-	op RosettaInterpreterValue interp (RosettaNumberLiteral exp)
-	op RosettaInterpreterValue interp (RosettaIntLiteral exp)
-	op RosettaInterpreterValue interp (RosettaPatternLiteral exp)
-	op RosettaInterpreterValue interp (ListLiteral exp)
-	op RosettaInterpreterValue interp (ArithmeticOperation exp)
-}
 
 interface RosettaExpression {
 	// Whether the expression was generated
@@ -199,8 +188,6 @@ class ConstructorKeyValuePair {
 
 interface RosettaOperation extends RosettaExpression {
 	String operator
-	
-	
 }
 /**
  * Binary operations
@@ -231,14 +218,12 @@ interface RosettaBinaryOperation extends RosettaOperation, HasGeneratedInput {
 }
 
 class ArithmeticOperation extends RosettaBinaryOperation {
-	
-	op RosettaInterpreterValue accept(InterpreterVisitor v) {
-		v.interp(this)
-	}
-	
 }
 
 class LogicalOperation extends RosettaBinaryOperation {
+	op RosettaInterpreterValue accept(InterpreterVisitor v) {
+		v.interp(this)
+	}
 }
 
 enum CardinalityModifier {
@@ -252,9 +237,15 @@ interface ModifiableBinaryOperation extends RosettaBinaryOperation {
 }
 
 class EqualityOperation extends ModifiableBinaryOperation {
+	op RosettaInterpreterValue accept(InterpreterVisitor v) {
+		v.interp(this)
+	}
 }
 
 class ComparisonOperation extends ModifiableBinaryOperation {
+	op RosettaInterpreterValue accept(InterpreterVisitor v) {
+		v.interp(this)
+	}
 }
 
 class RosettaContainsExpression extends RosettaBinaryOperation {

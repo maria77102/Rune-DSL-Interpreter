@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 
-import com.regnosys.rosetta.rosetta.expression.InterpreterVisitor;
+import com.regnosys.rosetta.rosetta.interpreter.InterpreterVisitor;
 
 public abstract class RosettaInterpreterVisitorBase implements InterpreterVisitor {
 	@Override
@@ -101,7 +101,8 @@ public abstract class RosettaInterpreterVisitorBase implements InterpreterVisito
 	}
 
 	@Override
-	public Object eInvoke(EOperation operation, EList<?> arguments) throws InvocationTargetException {
+	public Object eInvoke(EOperation operation, EList<?> arguments) 
+			throws InvocationTargetException {
 		// TODO Auto-generated method stub
 		return null;
 	}

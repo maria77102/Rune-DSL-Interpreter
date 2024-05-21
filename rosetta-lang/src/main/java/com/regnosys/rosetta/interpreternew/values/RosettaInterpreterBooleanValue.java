@@ -2,7 +2,13 @@ package com.regnosys.rosetta.interpreternew.values;
 
 import java.util.Objects;
 
-public class RosettaInterpreterBooleanValue extends RosettaInterpreterBaseValue{
+import org.eclipse.emf.common.util.EList;
+
+import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterBaseError;
+import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
+
+public class RosettaInterpreterBooleanValue extends RosettaInterpreterBaseValue 
+	implements Comparable<RosettaInterpreterBooleanValue>{
 	private boolean value;
 	
 	public RosettaInterpreterBooleanValue(boolean value) {
@@ -28,6 +34,13 @@ public class RosettaInterpreterBooleanValue extends RosettaInterpreterBaseValue{
 		RosettaInterpreterBooleanValue other = (RosettaInterpreterBooleanValue) obj;
 		return value == other.value;
 	}
+
+	@Override
+	public int compareTo(RosettaInterpreterBooleanValue o) {
+		return Boolean.compare(this.value, o.value);
+	}
+
+	
 	
 	
 }

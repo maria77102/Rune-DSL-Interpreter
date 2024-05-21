@@ -1,6 +1,7 @@
 package com.regnosys.rosetta.interpreternew.values;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -13,10 +14,40 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 
-import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
+import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterBaseError;
 
+public class RosettaInterpreterError implements RosettaInterpreterBaseError{
+	@Override
+	public int hashCode() {
+		return Objects.hash(errorMessage);
+	}
 
-public abstract class RosettaInterpreterBaseValue implements RosettaInterpreterValue{	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RosettaInterpreterError other = (RosettaInterpreterError) obj;
+		return Objects.equals(errorMessage, other.errorMessage);
+	}
+
+	private String errorMessage;
+	
+	public RosettaInterpreterError(String errorMessage) {
+		super();
+		this.errorMessage = errorMessage;
+	}
+	
+	public String getError() { return errorMessage; }
+	
+	@Override
+	public String toString() {
+		return "RosettaInterpreterError [errorMessage=" + errorMessage + "]";
+	}
+
 	@Override
 	public EClass eClass() {
 		// TODO Auto-generated method stub
@@ -102,8 +133,7 @@ public abstract class RosettaInterpreterBaseValue implements RosettaInterpreterV
 	}
 
 	@Override
-	public Object eInvoke(EOperation operation, EList<?> arguments) 
-			throws InvocationTargetException {
+	public Object eInvoke(EOperation operation, EList<?> arguments) throws InvocationTargetException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -128,6 +158,17 @@ public abstract class RosettaInterpreterBaseValue implements RosettaInterpreterV
 
 	@Override
 	public void eNotify(Notification notification) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getMessage() {
+		return errorMessage;
+	}
+
+	@Override
+	public void setMessage(String value) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
-import com.regnosys.rosetta.rosetta.expression.RosettaInterpreterValue;
+import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
 
 public class RosettaInterpreterListValue extends RosettaInterpreterBaseValue {
 	private List<RosettaInterpreterValue> expressions;
@@ -16,6 +16,11 @@ public class RosettaInterpreterListValue extends RosettaInterpreterBaseValue {
 	@Override
 	public int hashCode() {
 		return Objects.hash(expressions);
+	}
+
+	@Override
+	public String toString() {
+		return "RosettaInterpreterListValue [expressions=" + expressions + "]";
 	}
 
 	@Override
