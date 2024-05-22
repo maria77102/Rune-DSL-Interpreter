@@ -54,6 +54,14 @@ public class RosettaInterpreterArithmeticOperationsTest {
 		RosettaInterpreterValue val = interpreter.interp(expr);
 		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(3)), ((RosettaInterpreterNumberValue)val).getValue());
 	}
+	
+	@Test
+	public void DecimalPlusTest() {
+		RosettaExpression expr = parser.parseExpression("1.2 + 2.7");
+		RosettaInterpreterValue val = interpreter.interp(expr);
+		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(3.9)), ((RosettaInterpreterNumberValue)val).getValue());
+	}
+	
 
 	@Test
 	public void MinusTest() {

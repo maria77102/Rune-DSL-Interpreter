@@ -5,7 +5,8 @@ import java.util.Objects;
 
 import com.rosetta.model.lib.RosettaNumber;
 
-public class RosettaInterpreterNumberValue extends RosettaInterpreterBaseValue implements Comparable<RosettaInterpreterNumberValue>{
+public class RosettaInterpreterNumberValue extends RosettaInterpreterBaseValue 
+	implements Comparable<RosettaInterpreterNumberValue>{
 	private RosettaNumber value;
 	
 	public RosettaInterpreterNumberValue(BigDecimal value) {

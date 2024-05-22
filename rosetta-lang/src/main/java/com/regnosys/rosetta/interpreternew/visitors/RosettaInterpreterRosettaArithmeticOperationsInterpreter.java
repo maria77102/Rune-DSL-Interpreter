@@ -2,7 +2,7 @@ package com.regnosys.rosetta.interpreternew.visitors;
 
 import java.util.List;
 
-import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterBooleanValue;
+
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterError;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterIntegerValue;
@@ -34,13 +34,14 @@ public class RosettaInterpreterRosettaArithmeticOperationsInterpreter extends Ro
 				!(rightInterpreted instanceof RosettaInterpreterNumberValue || 
 						rightInterpreted instanceof RosettaInterpreterStringValue ||
 						rightInterpreted instanceof RosettaInterpreterIntegerValue)) {
+			
 				// Check for errors in the left or right side of the binary operation
-			RosettaInterpreterErrorValue leftErrors = 
-					checkForErrors(leftInterpreted, "Leftside");
-			RosettaInterpreterErrorValue rightErrors = 
-					checkForErrors(rightInterpreted, "Rightside");
-			if(RosettaInterpreterErrorValue.errorsExist(leftErrors, rightErrors))
-				return RosettaInterpreterErrorValue.merge(List.of(leftErrors, rightErrors));
+				RosettaInterpreterErrorValue leftErrors = 
+						checkForErrors(leftInterpreted, "Leftside");
+				RosettaInterpreterErrorValue rightErrors = 
+						checkForErrors(rightInterpreted, "Rightside");
+				if(RosettaInterpreterErrorValue.errorsExist(leftErrors, rightErrors))
+					return RosettaInterpreterErrorValue.merge(List.of(leftErrors, rightErrors));
 		}
 		
 		
@@ -58,22 +59,19 @@ public class RosettaInterpreterRosettaArithmeticOperationsInterpreter extends Ro
 			leftNumber = ((RosettaInterpreterNumberValue) leftInterpreted).getValue();
 			else if (leftInterpreted instanceof RosettaInterpreterIntegerValue)
 				leftNumber = RosettaNumber.valueOf(((RosettaInterpreterIntegerValue) leftInterpreted).getValue());
-			//else //error here after we implement it
 		if (rightInterpreted instanceof RosettaInterpreterNumberValue)
 			rightNumber = ((RosettaInterpreterNumberValue) rightInterpreted).getValue();
 			else if (rightInterpreted instanceof RosettaInterpreterIntegerValue)
 				rightNumber = RosettaNumber.valueOf(((RosettaInterpreterIntegerValue) rightInterpreted).getValue());
-			//else //error here after we implement it
 		if(expr.getOperator().equals("+")) {
 			return new RosettaInterpreterNumberValue((leftNumber.add(rightNumber)).bigDecimalValue());
 		} else if(expr.getOperator().equals("-")) {
 			return new RosettaInterpreterNumberValue((leftNumber.subtract(rightNumber)).bigDecimalValue());
 		} else if(expr.getOperator().equals("*")) {
 			return new RosettaInterpreterNumberValue((leftNumber.multiply(rightNumber)).bigDecimalValue());
-		} else if(expr.getOperator().equals("/")) {
+		} else {
 			return new RosettaInterpreterNumberValue((leftNumber.divide(rightNumber)).bigDecimalValue());
 		}
-		return null; //propagated error when we have it
 	}
 	
 	
@@ -90,14 +88,8 @@ public class RosettaInterpreterRosettaArithmeticOperationsInterpreter extends Ro
 	 */
 	private RosettaInterpreterErrorValue checkForErrors(
 			RosettaInterpreterValue interpretedValue, String side) {
-		if (interpretedValue instanceof RosettaInterpreterNumberValue || 
-				interpretedValue instanceof RosettaInterpreterStringValue ||
-				interpretedValue instanceof RosettaInterpreterIntegerValue) {
-			// No errors found.
-			// I return an error value without any errors in its list,
-			// So that I can still use the merge method with 2 elements
-			return new RosettaInterpreterErrorValue();
-		} else if (RosettaInterpreterErrorValue.errorsExist(interpretedValue)) {
+		
+		if (RosettaInterpreterErrorValue.errorsExist(interpretedValue)) {
 			// The interpreted value was an error so we propagate it
 			return (RosettaInterpreterErrorValue) interpretedValue;
 		} else {
