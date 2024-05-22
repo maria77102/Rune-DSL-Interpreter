@@ -104,10 +104,26 @@ public class RosettaInterpreterArithmeticOperationsTest {
 	}
 	
 	@Test
-	public void WrongTypeRightTest() {
+	public void WrongTypeRightTestString() {
 		RosettaExpression expr = parser.parseExpression("\"Hello \" + True");
 		RosettaInterpreterValue val = interpreter.interp(expr);
-		assertEquals("Arithmetic Operation: RightSide is not of type Number/String", 
+		assertEquals("Arithmetic Operation: Rightside is not of type Number/String", 
+				((RosettaInterpreterErrorValue)val).getErrors().get(0).getMessage());
+	}
+	
+	@Test
+	public void WrongTypeRightTestInteger() {
+		RosettaExpression expr = parser.parseExpression("2 + True");
+		RosettaInterpreterValue val = interpreter.interp(expr);
+		assertEquals("Arithmetic Operation: Rightside is not of type Number/String", 
+				((RosettaInterpreterErrorValue)val).getErrors().get(0).getMessage());
+	}
+	
+	@Test
+	public void WrongTypeRightTestNumber() {
+		RosettaExpression expr = parser.parseExpression("2.5 + True");
+		RosettaInterpreterValue val = interpreter.interp(expr);
+		assertEquals("Arithmetic Operation: Rightside is not of type Number/String", 
 				((RosettaInterpreterErrorValue)val).getErrors().get(0).getMessage());
 	}
 	

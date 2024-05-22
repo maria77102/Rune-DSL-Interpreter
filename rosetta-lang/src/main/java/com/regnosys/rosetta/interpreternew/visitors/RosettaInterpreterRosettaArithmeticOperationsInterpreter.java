@@ -85,13 +85,19 @@ public class RosettaInterpreterRosettaArithmeticOperationsInterpreter extends Ro
 	 */
 	private RosettaInterpreterErrorValue checkForErrors(
 			RosettaInterpreterValue interpretedValue, String side) {
+		if (interpretedValue instanceof RosettaInterpreterNumberValue || 
+				interpretedValue instanceof RosettaInterpreterStringValue ||
+				interpretedValue instanceof RosettaInterpreterIntegerValue)
+			// If the value satisfies the type conditions, we return an empty 
+			// error value so that the merger has two error values to merge
+			return new RosettaInterpreterErrorValue();
 		
-		if (RosettaInterpreterErrorValue.errorsExist(interpretedValue)) {
+		else if (RosettaInterpreterErrorValue.errorsExist(interpretedValue)) {
 			// The interpreted value was an error so we propagate it
 			return (RosettaInterpreterErrorValue) interpretedValue;
 		} else {
 			// The interpreted value was not an error,
-			// but something other than a boolean
+			// but something other than a string or number
 			return new RosettaInterpreterErrorValue(
 					new RosettaInterpreterError(
 							"Arithmetic Operation: " + side + 
