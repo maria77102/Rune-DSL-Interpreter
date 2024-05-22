@@ -40,8 +40,7 @@ public class RosettaInterpreterRosettaArithmeticOperationsInterpreter extends Ro
 						checkForErrors(leftInterpreted, "Leftside");
 				RosettaInterpreterErrorValue rightErrors = 
 						checkForErrors(rightInterpreted, "Rightside");
-				if(RosettaInterpreterErrorValue.errorsExist(leftErrors, rightErrors))
-					return RosettaInterpreterErrorValue.merge(List.of(leftErrors, rightErrors));
+				return RosettaInterpreterErrorValue.merge(List.of(leftErrors, rightErrors));
 		}
 		
 		
@@ -57,12 +56,10 @@ public class RosettaInterpreterRosettaArithmeticOperationsInterpreter extends Ro
 			
 		if (leftInterpreted instanceof RosettaInterpreterNumberValue)
 			leftNumber = ((RosettaInterpreterNumberValue) leftInterpreted).getValue();
-			else if (leftInterpreted instanceof RosettaInterpreterIntegerValue)
-				leftNumber = RosettaNumber.valueOf(((RosettaInterpreterIntegerValue) leftInterpreted).getValue());
+			else leftNumber = RosettaNumber.valueOf(((RosettaInterpreterIntegerValue) leftInterpreted).getValue());
 		if (rightInterpreted instanceof RosettaInterpreterNumberValue)
 			rightNumber = ((RosettaInterpreterNumberValue) rightInterpreted).getValue();
-			else if (rightInterpreted instanceof RosettaInterpreterIntegerValue)
-				rightNumber = RosettaNumber.valueOf(((RosettaInterpreterIntegerValue) rightInterpreted).getValue());
+			else rightNumber = RosettaNumber.valueOf(((RosettaInterpreterIntegerValue) rightInterpreted).getValue());
 		if(expr.getOperator().equals("+")) {
 			return new RosettaInterpreterNumberValue((leftNumber.add(rightNumber)).bigDecimalValue());
 		} else if(expr.getOperator().equals("-")) {

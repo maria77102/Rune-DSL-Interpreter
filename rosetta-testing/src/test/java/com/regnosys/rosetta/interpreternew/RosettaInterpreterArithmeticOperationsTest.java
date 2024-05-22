@@ -3,9 +3,6 @@ package com.regnosys.rosetta.interpreternew;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.eclipse.xtext.testing.InjectWith;
@@ -14,18 +11,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterBooleanValue;
-import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterError;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
-import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterIntegerValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterNumberValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterStringValue;
-import com.regnosys.rosetta.rosetta.expression.ArithmeticOperation;
 import com.regnosys.rosetta.rosetta.expression.ExpressionFactory;
-import com.regnosys.rosetta.rosetta.expression.LogicalOperation;
-import com.regnosys.rosetta.rosetta.expression.RosettaBooleanLiteral;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
-import com.regnosys.rosetta.rosetta.expression.RosettaIntLiteral;
 import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
 import com.regnosys.rosetta.rosetta.expression.impl.ExpressionFactoryImpl;
 import com.regnosys.rosetta.tests.RosettaInjectorProvider;
@@ -56,12 +46,18 @@ public class RosettaInterpreterArithmeticOperationsTest {
 	}
 	
 	@Test
+	public void CompositePlusTest() {
+		RosettaExpression expr = parser.parseExpression("1+2+3");
+		RosettaInterpreterValue val = interpreter.interp(expr);
+		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(6)), ((RosettaInterpreterNumberValue)val).getValue());
+	}
+	
+	@Test
 	public void DecimalPlusTest() {
 		RosettaExpression expr = parser.parseExpression("1.2 + 2.7");
 		RosettaInterpreterValue val = interpreter.interp(expr);
 		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(3.9)), ((RosettaInterpreterNumberValue)val).getValue());
 	}
-	
 
 	@Test
 	public void MinusTest() {
@@ -100,10 +96,26 @@ public class RosettaInterpreterArithmeticOperationsTest {
 	}
 	
 	@Test
-	public void WrongTypeTest() {
+	public void WrongTypeLeftTest() {
 		RosettaExpression expr = parser.parseExpression("True - \"World\"");
 		RosettaInterpreterValue val = interpreter.interp(expr);
 		assertEquals("Arithmetic Operation: Leftside is not of type Number/String", 
+				((RosettaInterpreterErrorValue)val).getErrors().get(0).getMessage());
+	}
+	
+	@Test
+	public void WrongTypeRightTest() {
+		RosettaExpression expr = parser.parseExpression("\"Hello \" + True");
+		RosettaInterpreterValue val = interpreter.interp(expr);
+		assertEquals("Arithmetic Operation: RightSide is not of type Number/String", 
+				((RosettaInterpreterErrorValue)val).getErrors().get(0).getMessage());
+	}
+	
+	@Test
+	public void LeftsideErrorTest() {
+		RosettaExpression expr = parser.parseExpression("\"Hello \" - \"World\" + \"World\"");
+		RosettaInterpreterValue val = interpreter.interp(expr);
+		assertEquals("The terms are strings but the operation is not concatenation: not implemented", 
 				((RosettaInterpreterErrorValue)val).getErrors().get(0).getMessage());
 	}
 }
