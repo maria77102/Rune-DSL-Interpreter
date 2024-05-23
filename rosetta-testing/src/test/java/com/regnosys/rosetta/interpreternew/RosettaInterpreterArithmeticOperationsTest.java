@@ -2,6 +2,7 @@ package com.regnosys.rosetta.interpreternew;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterError;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterNumberValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterStringValue;
@@ -13,6 +14,8 @@ import com.regnosys.rosetta.tests.RosettaInjectorProvider;
 import com.regnosys.rosetta.tests.util.ExpressionParser;
 import com.rosetta.model.lib.RosettaNumber;
 import java.math.BigDecimal;
+import java.util.List;
+
 import javax.inject.Inject;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
@@ -167,5 +170,23 @@ public class RosettaInterpreterArithmeticOperationsTest {
 				+ "operation is not concatenation: not implemented", 
 				((RosettaInterpreterErrorValue)val)
 				.getErrors().get(0).getMessage());
+	}
+	
+	@Test
+	public void complexTest() {
+		RosettaExpression expr = parser
+				.parseExpression("(\"Hello \" - \"World\") + (2 + ([1, 2] any > 0))");
+		RosettaInterpreterValue val = interpreter.interp(expr);
+		List<RosettaInterpreterError> expected = List.of(
+				new RosettaInterpreterError(
+						"The terms are strings but the operation "
+						+ "is not concatenation: not implemented"),
+				new RosettaInterpreterError(
+						"Arithmetic Operation: Rightside "
+						 + "is not of type Number/String")
+					);
+		assertEquals(expected, 
+				((RosettaInterpreterErrorValue)val)
+				.getErrors());
 	}
 }
