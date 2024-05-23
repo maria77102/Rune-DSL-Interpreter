@@ -6,6 +6,7 @@ import com.regnosys.rosetta.rosetta.expression.ComparisonOperation;
 import com.regnosys.rosetta.rosetta.expression.EqualityOperation;
 import com.regnosys.rosetta.rosetta.expression.ListLiteral;
 import com.regnosys.rosetta.rosetta.expression.RosettaBooleanLiteral;
+import com.regnosys.rosetta.rosetta.expression.RosettaConditionalExpression;
 import com.regnosys.rosetta.rosetta.expression.RosettaIntLiteral;
 import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
 import com.regnosys.rosetta.rosetta.expression.RosettaNumberLiteral;
@@ -19,6 +20,7 @@ import com.regnosys.rosetta.interpreternew.visitors.RosettaInterpreterComparison
 import com.regnosys.rosetta.interpreternew.visitors.RosettaInterpreterListLiteralInterpreter;
 import com.regnosys.rosetta.interpreternew.visitors.RosettaInterpreterRosettaArithmeticOperationsInterpreter;
 import com.regnosys.rosetta.interpreternew.visitors.RosettaInterpreterRosettaBooleanLiteralInterpreter;
+import com.regnosys.rosetta.interpreternew.visitors.RosettaInterpreterRosettaConditionalExpressionInterpreter;
 import com.regnosys.rosetta.interpreternew.visitors.RosettaInterpreterRosettaIntLiteralInterpreter;
 import com.regnosys.rosetta.interpreternew.visitors.RosettaInterpreterRosettaNumberLiteralInterpreter;
 import com.regnosys.rosetta.interpreternew.visitors.RosettaInterpreterRosettaStringLiteralInterpreter;
@@ -57,8 +59,8 @@ public class RosettaInterpreterVisitor extends RosettaInterpreterVisitorBase {
 	}
 	
 	@Override
-	public RosettaInterpreterValue interp(ArithmeticOperation exp) {
-		return new RosettaInterpreterRosettaArithmeticOperationsInterpreter().interp(exp);
+	public RosettaInterpreterValue interp(RosettaConditionalExpression exp) {
+		return new RosettaInterpreterRosettaConditionalExpressionInterpreter().interp(exp);
 	}
 
 	@Override
@@ -74,5 +76,10 @@ public class RosettaInterpreterVisitor extends RosettaInterpreterVisitorBase {
 	@Override
 	public RosettaInterpreterValue interp(ComparisonOperation exp) {
 		return new RosettaInterpreterComparisonOperationInterpreter().interp(exp);
+	}
+	
+	@Override
+	public RosettaInterpreterValue interp(ArithmeticOperation exp) {
+		return new RosettaInterpreterRosettaArithmeticOperationsInterpreter().interp(exp);
 	}
 }
