@@ -50,12 +50,23 @@ public class RosettaInterpreterRosettaArithmeticOperationsInterpreter
 			return RosettaInterpreterErrorValue.merge(List.of(leftErrors, rightErrors));
 		}
 		
-		RosettaNumber leftNumber;
-		RosettaNumber rightNumber;
-		
+		boolean sameType = 
+				(leftInterpreted instanceof RosettaInterpreterStringValue
+				&& rightInterpreted instanceof RosettaInterpreterStringValue) 
+				|| (!(leftInterpreted instanceof RosettaInterpreterStringValue)
+				&& !(rightInterpreted instanceof RosettaInterpreterStringValue)); 
+		if (!sameType) {
+			return new RosettaInterpreterErrorValue(
+					new RosettaInterpreterError(
+				"The terms of the operation "
+				+ "are neither both strings nor both numbers"));
+			}
+			
 		if (leftInterpreted instanceof RosettaInterpreterStringValue) {
-			leftString = ((RosettaInterpreterStringValue) leftInterpreted).getValue();
-			rightString = ((RosettaInterpreterStringValue) rightInterpreted).getValue();
+			leftString = ((RosettaInterpreterStringValue) leftInterpreted)
+					.getValue();
+			rightString = ((RosettaInterpreterStringValue) rightInterpreted)
+					.getValue();
 			if (expr.getOperator().equals("+")) {
 				return new RosettaInterpreterStringValue(leftString + rightString);
 				}
@@ -66,6 +77,9 @@ public class RosettaInterpreterRosettaArithmeticOperationsInterpreter
 				+ "is not concatenation: not implemented"));
 			}
 		}
+		
+		RosettaNumber leftNumber;
+		RosettaNumber rightNumber;
 			
 		if (leftInterpreted instanceof RosettaInterpreterNumberValue) {
 			leftNumber = ((RosettaInterpreterNumberValue) leftInterpreted).getValue();
