@@ -2,12 +2,16 @@ package com.regnosys.rosetta.interpreternew.values;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.stream.Stream;
+
+import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
 
 import com.rosetta.model.lib.RosettaNumber;
 
 public class RosettaInterpreterNumberValue extends RosettaInterpreterBaseValue 
-	implements Comparable<RosettaInterpreterNumberValue>{
+	implements Comparable<RosettaInterpreterNumberValue> { 
 	private RosettaNumber value;
+
 	
 	public RosettaInterpreterNumberValue(BigDecimal value) {
 		super();
@@ -28,12 +32,15 @@ public class RosettaInterpreterNumberValue extends RosettaInterpreterBaseValue
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		RosettaInterpreterNumberValue other = (RosettaInterpreterNumberValue) obj;
 		return Objects.equals(value, other.value);
 	}
@@ -41,6 +48,16 @@ public class RosettaInterpreterNumberValue extends RosettaInterpreterBaseValue
 	@Override
 	public int compareTo(RosettaInterpreterNumberValue o) {
 		return this.value.compareTo(o.value);
+	}
+
+	@Override
+	public Stream<Object> toElementStream() {
+		return Stream.of(value);
+	}
+
+	@Override
+	public Stream<RosettaInterpreterValue> toValueStream() {
+		return Stream.of(this);
 	}
 	
 }
