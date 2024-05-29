@@ -2,6 +2,7 @@ package com.regnosys.rosetta.interpreternew.visitors;
 
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterBaseValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterEnvironment;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
 import com.regnosys.rosetta.rosetta.RosettaInterpreterBaseEnvironment;
 import com.regnosys.rosetta.rosetta.expression.RosettaSymbolReference;
 import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
@@ -19,14 +20,13 @@ public class RosettaInterpreterVariableInterpreter {
 	 * 		   If errors are encountered, a RosettaInterpreterErrorValue representing
      *         the error.
 	 */
-	public RosettaInterpreterValue interp(RosettaSymbolReference exp, 
-			RosettaInterpreterBaseEnvironment environment) {
-		RosettaInterpreterEnvironment env = (RosettaInterpreterEnvironment) environment;
+	public RosettaInterpreterValueEnvironmentTuple interp(RosettaSymbolReference exp, 
+			RosettaInterpreterEnvironment env) {
 		
 		//Search for variable in environment
 		RosettaInterpreterBaseValue varValue = env.findValue(exp.getSymbol().getName());
 		
-		return varValue;
+		return new RosettaInterpreterValueEnvironmentTuple(varValue, env);
 	}
 
 }

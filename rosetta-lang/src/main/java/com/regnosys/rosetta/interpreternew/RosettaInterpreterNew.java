@@ -3,8 +3,8 @@ package com.regnosys.rosetta.interpreternew;
 import javax.inject.Inject;
 
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterEnvironment;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
-import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
 
 public class RosettaInterpreterNew {
 	
@@ -18,12 +18,9 @@ public class RosettaInterpreterNew {
 	 * @param expression the expression to be interpreted
 	 * @return value of RosettaIntLiteral otherwise exception
 	 */
-	public RosettaInterpreterValue interp(RosettaExpression expression) {
-		return expression.accept(visitor, new RosettaInterpreterEnvironment());	
-	}
 	
-	public RosettaInterpreterValue interp(RosettaExpression expression, 
-			RosettaInterpreterEnvironment env) {
-		return expression.accept(visitor, env);	
+	public RosettaInterpreterValueEnvironmentTuple interp(RosettaExpression expression) {
+		return (RosettaInterpreterValueEnvironmentTuple)
+				expression.accept(visitor, new RosettaInterpreterEnvironment());	
 	}
 }

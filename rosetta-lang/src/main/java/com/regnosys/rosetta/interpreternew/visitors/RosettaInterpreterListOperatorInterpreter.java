@@ -14,6 +14,7 @@ import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterIntegerValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterListValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterNumberValue;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
 import com.regnosys.rosetta.rosetta.RosettaInterpreterBaseEnvironment;
 import com.regnosys.rosetta.rosetta.expression.DistinctOperation;
 import com.regnosys.rosetta.rosetta.expression.FirstOperation;
@@ -39,12 +40,14 @@ public class RosettaInterpreterListOperatorInterpreter
 	 * @param exp Exists operation to interpret
 	 * @return Boolean indicating if the argument exists or not
 	 */
-	public RosettaInterpreterValue interp(RosettaExistsExpression exp, RosettaInterpreterBaseEnvironment env) {
+	public RosettaInterpreterValueEnvironmentTuple interp(RosettaExistsExpression exp, 
+			RosettaInterpreterEnvironment env) {
 		RosettaExpression argument = exp.getArgument();
-		RosettaInterpreterValue interpretedArgument = argument.accept(visitor, env);
+		RosettaInterpreterValue interpretedArgument = ((RosettaInterpreterValueEnvironmentTuple)argument
+				.accept(visitor, env)).getValue();
 		
 		if (RosettaInterpreterErrorValue.errorsExist(interpretedArgument)) {
-			return interpretedArgument;
+			return new RosettaInterpreterValueEnvironmentTuple(interpretedArgument, env);
 		}
 		
 		long count = RosettaInterpreterBaseValue.valueStream(interpretedArgument).count();
@@ -61,7 +64,8 @@ public class RosettaInterpreterListOperatorInterpreter
 				exists = count > 0;
 		}
 		
-		return new RosettaInterpreterBooleanValue(exists);
+		return new RosettaInterpreterValueEnvironmentTuple(
+				new RosettaInterpreterBooleanValue(exists), env);
 	}
 
 	/**
@@ -73,17 +77,20 @@ public class RosettaInterpreterListOperatorInterpreter
 	 * @param exp "Is absent" expression to intepret
 	 * @return Boolean indicating if the interpreted argument is absent
 	 */
-	public RosettaInterpreterValue interp(RosettaAbsentExpression exp, RosettaInterpreterBaseEnvironment env) {
+	public RosettaInterpreterValueEnvironmentTuple interp(RosettaAbsentExpression exp,
+			RosettaInterpreterEnvironment env) {
 		RosettaExpression argument = exp.getArgument();
-		RosettaInterpreterValue interpretedArgument = argument.accept(visitor, env);
+		RosettaInterpreterValue interpretedArgument = ((RosettaInterpreterValueEnvironmentTuple)argument
+				.accept(visitor, env)).getValue();
 		
 		if (RosettaInterpreterErrorValue.errorsExist(interpretedArgument)) {
-			return interpretedArgument;
+			return new RosettaInterpreterValueEnvironmentTuple(interpretedArgument, env);
 		}
 		
 		long count = RosettaInterpreterBaseValue.valueStream(interpretedArgument).count();
 		boolean isAbsent = count == 0;
-		return new RosettaInterpreterBooleanValue(isAbsent);
+		return new RosettaInterpreterValueEnvironmentTuple(
+				new RosettaInterpreterBooleanValue(isAbsent), env);
 	}
 
 	/**
@@ -93,16 +100,20 @@ public class RosettaInterpreterListOperatorInterpreter
 	 * @param exp Expression to perform 'count' on
 	 * @return Integer indicating how many elements there are in the list
 	 */
-	public RosettaInterpreterValue interp(RosettaCountOperation exp, RosettaInterpreterBaseEnvironment env) {
+	public RosettaInterpreterValueEnvironmentTuple interp(RosettaCountOperation exp, 
+			RosettaInterpreterEnvironment env) {
 		RosettaExpression argument = exp.getArgument();
-		RosettaInterpreterValue interpretedArgument = argument.accept(visitor, env);
+		RosettaInterpreterValue interpretedArgument = ((RosettaInterpreterValueEnvironmentTuple)argument
+				.accept(visitor, env)).getValue();
 		
 		if (RosettaInterpreterErrorValue.errorsExist(interpretedArgument)) {
-			return interpretedArgument;
+			return new RosettaInterpreterValueEnvironmentTuple(
+					interpretedArgument, env);
 		}
 		
 		long count = RosettaInterpreterBaseValue.valueStream(interpretedArgument).count();
-		return new RosettaInterpreterIntegerValue(BigInteger.valueOf(count));
+		return new RosettaInterpreterValueEnvironmentTuple(
+				new RosettaInterpreterIntegerValue(BigInteger.valueOf(count)), env);
 	}
 
 	/**
@@ -113,23 +124,28 @@ public class RosettaInterpreterListOperatorInterpreter
 	 * @param exp Expression on which to perform 'first' operation
 	 * @return First element of the list
 	 */
-	public RosettaInterpreterValue interp(FirstOperation exp, RosettaInterpreterBaseEnvironment env) {
+	public RosettaInterpreterValueEnvironmentTuple interp(FirstOperation exp, 
+			RosettaInterpreterEnvironment env) {
 		RosettaExpression argument = exp.getArgument();
-		RosettaInterpreterValue interpretedArgument = argument.accept(visitor, env);
+		RosettaInterpreterValue interpretedArgument = ((RosettaInterpreterValueEnvironmentTuple)argument
+				.accept(visitor, env)).getValue();
 		
 		if (RosettaInterpreterErrorValue.errorsExist(interpretedArgument)) {
-			return interpretedArgument;
+			return new RosettaInterpreterValueEnvironmentTuple(
+					interpretedArgument, env);
 		}
 		
 		long count = RosettaInterpreterBaseValue.valueStream(interpretedArgument).count();
 		if (count == 0L) {
 			// List is empty
-			return new RosettaInterpreterErrorValue(
-					new RosettaInterpreterError("List is empty"));
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterErrorValue(
+					new RosettaInterpreterError("List is empty")), env);
 		} else {
 			// List has at least one element
-			return RosettaInterpreterBaseValue.valueStream(interpretedArgument)
-					.collect(Collectors.toList()).get(0);
+			return new RosettaInterpreterValueEnvironmentTuple(
+					RosettaInterpreterBaseValue.valueStream(interpretedArgument)
+					.collect(Collectors.toList()).get(0), env);
 		}
 	}
 
@@ -142,36 +158,27 @@ public class RosettaInterpreterListOperatorInterpreter
 	 * @param exp Expression on which to perform 'last' operation
 	 * @return Last element of the list
 	 */
-	public RosettaInterpreterValue interp(LastOperation exp, RosettaInterpreterBaseEnvironment env) {
+	public RosettaInterpreterValueEnvironmentTuple interp(LastOperation exp, 
+			RosettaInterpreterEnvironment env) {
 		RosettaExpression argument = exp.getArgument();
-		RosettaInterpreterValue interpretedArgument = argument.accept(visitor, env);
+		RosettaInterpreterValue interpretedArgument = ((RosettaInterpreterValueEnvironmentTuple)argument
+				.accept(visitor, env)).getValue();
 		
 		if (RosettaInterpreterErrorValue.errorsExist(interpretedArgument)) {
-			return interpretedArgument;
+			return new RosettaInterpreterValueEnvironmentTuple(interpretedArgument, env);
 		}
 		
 		long count = RosettaInterpreterBaseValue.valueStream(interpretedArgument).count();
 		if (count == 0L) {
 			// List is empty
-			return new RosettaInterpreterErrorValue(
-					new RosettaInterpreterError("List is empty"));
+			return new RosettaInterpreterValueEnvironmentTuple(new RosettaInterpreterErrorValue(
+					new RosettaInterpreterError("List is empty")), env);
 		} else {
 			// List has at least one element
-			return RosettaInterpreterBaseValue.valueStream(interpretedArgument)
-					.collect(Collectors.toList()).get((int)count - 1);
+			return new RosettaInterpreterValueEnvironmentTuple(
+					RosettaInterpreterBaseValue.valueStream(interpretedArgument)
+					.collect(Collectors.toList()).get((int)count - 1), env);
 		}
-	}
-
-	public RosettaInterpreterValue interp(DistinctOperation exp) {
-		return interp(exp, new RosettaInterpreterEnvironment());
-	}
-	
-	public RosettaInterpreterValue interp(ReverseOperation exp) {
-		return interp(exp, new RosettaInterpreterEnvironment());
-	}
-	
-	public RosettaInterpreterValue interp(SumOperation exp) {
-		return interp(exp, new RosettaInterpreterEnvironment());
 	}
 
 	/**
@@ -183,12 +190,15 @@ public class RosettaInterpreterListOperatorInterpreter
 	 * @param exp - distinct operation to interpret
 	 * @return - list Value of distinct values
 	 */
-	public RosettaInterpreterValue interp(DistinctOperation exp, RosettaInterpreterBaseEnvironment env) {
+	public RosettaInterpreterValueEnvironmentTuple interp(DistinctOperation exp, 
+			RosettaInterpreterEnvironment env) {
 		RosettaExpression expression = exp.getArgument();
-		RosettaInterpreterValue val = expression.accept(visitor, env);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)expression
+				.accept(visitor, env)).getValue();
 		
 		if (RosettaInterpreterErrorValue.errorsExist(val)) {
-			return RosettaInterpreterErrorValue.merge(val);
+			return new RosettaInterpreterValueEnvironmentTuple(
+					RosettaInterpreterErrorValue.merge(val), env);
 		}
 		
 		List<RosettaInterpreterValue> distinct = 
@@ -196,7 +206,8 @@ public class RosettaInterpreterListOperatorInterpreter
 				.distinct()
 				.collect(Collectors.toList());
 		
-		return new RosettaInterpreterListValue(distinct);
+		return new RosettaInterpreterValueEnvironmentTuple(
+				new RosettaInterpreterListValue(distinct), env);
 	}
 
 	/**
@@ -206,19 +217,22 @@ public class RosettaInterpreterListOperatorInterpreter
 	 * @param exp - Reverse operation to interpret
 	 * @return - Reversed list
 	 */
-	public RosettaInterpreterValue interp(ReverseOperation exp, RosettaInterpreterBaseEnvironment env) {
+	public RosettaInterpreterValueEnvironmentTuple interp(ReverseOperation exp,
+			RosettaInterpreterEnvironment env) {
 		RosettaExpression expression = exp.getArgument();
-		RosettaInterpreterValue val = expression.accept(visitor, env);
-		
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)expression
+				.accept(visitor, env)).getValue();
 		if (RosettaInterpreterErrorValue.errorsExist(val)) {
-			return RosettaInterpreterErrorValue.merge(val);
+			return new RosettaInterpreterValueEnvironmentTuple(
+					RosettaInterpreterErrorValue.merge(val), env);
 		}
 		
 		List<RosettaInterpreterValue> values =
 				RosettaInterpreterBaseValue.toValueList(val);
 		Collections.reverse(values);
 		
-		return new RosettaInterpreterListValue(values);
+		return new RosettaInterpreterValueEnvironmentTuple(
+				new RosettaInterpreterListValue(values), env);
 	}
 
 	/**
@@ -229,20 +243,24 @@ public class RosettaInterpreterListOperatorInterpreter
 	 * @param exp - Sum operation to interpret
 	 * @return sum of elements or error if elements are not summable
 	 */
-	public RosettaInterpreterValue interp(SumOperation exp, RosettaInterpreterBaseEnvironment env) {
+	public RosettaInterpreterValueEnvironmentTuple interp(SumOperation exp, 
+			RosettaInterpreterEnvironment env) {
 		RosettaExpression expression = exp.getArgument();
-		RosettaInterpreterValue val = expression.accept(visitor, env);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)expression
+				.accept(visitor, env)).getValue();
 		
 		if (RosettaInterpreterErrorValue.errorsExist(val)) {
-			return RosettaInterpreterErrorValue.merge(val);
+			return new RosettaInterpreterValueEnvironmentTuple(
+					RosettaInterpreterErrorValue.merge(val), env);
 		}
 		
 		// In the compiler, this returns a null rather than an error
 		// So I'm not exactly sure how to handle it
 		if (RosettaInterpreterBaseValue.toValueList(val).size() < 1) {
-			return new RosettaInterpreterErrorValue(
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterErrorValue(
 					new RosettaInterpreterError("Cannot take sum"
-							+ " of empty list"));
+							+ " of empty list")), env);
 		}
 		
 		List<RosettaInterpreterValue> values =
@@ -259,9 +277,10 @@ public class RosettaInterpreterListOperatorInterpreter
 						BigDecimal.valueOf(valInt.getValue().longValue())));
 			}
 			else if (!(v instanceof RosettaInterpreterNumberValue)) {
-				return new RosettaInterpreterErrorValue(
+				return new RosettaInterpreterValueEnvironmentTuple(
+						new RosettaInterpreterErrorValue(
 						new RosettaInterpreterError("Cannot take sum"
-								+ "of non-number value"));
+								+ "of non-number value")), env);
 			}
 		}
 		
@@ -269,6 +288,7 @@ public class RosettaInterpreterListOperatorInterpreter
 				.map(x -> ((RosettaInterpreterNumberValue)x).getValue())
 				.reduce(RosettaNumber.valueOf(BigDecimal.valueOf(0)), (x, y) -> x.add(y));
 		
-		return new RosettaInterpreterNumberValue(result);
+		return new RosettaInterpreterValueEnvironmentTuple(
+				new RosettaInterpreterNumberValue(result), env);
 	}
 }

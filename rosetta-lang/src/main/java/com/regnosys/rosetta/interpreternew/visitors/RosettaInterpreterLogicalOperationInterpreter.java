@@ -7,16 +7,13 @@ import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterBooleanValue
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterEnvironment;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterError;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
 import com.regnosys.rosetta.rosetta.expression.LogicalOperation;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
 import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
 
 public class RosettaInterpreterLogicalOperationInterpreter 
 	extends RosettaInterpreterConcreteInterpreter {
-	
-	public RosettaInterpreterBaseValue interp(LogicalOperation expr) {
-		return interp(expr, new RosettaInterpreterEnvironment());
-	}
 
 	/**
 	 * Interpreter method for Logical Operations.
@@ -24,15 +21,17 @@ public class RosettaInterpreterLogicalOperationInterpreter
 	 * @param expr LogicalOperaation to be interpreted
 	 * @return The interpreted value
 	 */
-	public RosettaInterpreterBaseValue interp(LogicalOperation expr, 
+	public RosettaInterpreterValueEnvironmentTuple interp(LogicalOperation expr, 
 			RosettaInterpreterEnvironment env) {
 		boolean leftBool = false;
 		boolean rightBool = false;
 		
 		RosettaExpression left = expr.getLeft();
 		RosettaExpression right = expr.getRight();
-		RosettaInterpreterValue leftInterpreted = left.accept(visitor, env);
-		RosettaInterpreterValue rightInterpreted = right.accept(visitor, env);
+		RosettaInterpreterValue leftInterpreted = ((RosettaInterpreterValueEnvironmentTuple)left
+				.accept(visitor, env)).getValue();
+		RosettaInterpreterValue rightInterpreted = ((RosettaInterpreterValueEnvironmentTuple)right
+				.accept(visitor, env)).getValue(); 
 		
 		if (leftInterpreted instanceof RosettaInterpreterBooleanValue 
 				&& rightInterpreted instanceof RosettaInterpreterBooleanValue) {
@@ -45,19 +44,23 @@ public class RosettaInterpreterLogicalOperationInterpreter
 			RosettaInterpreterErrorValue rightErrors = 
 					checkForErrors(rightInterpreted, "Rightside");
 			
-			return RosettaInterpreterErrorValue.merge(List.of(leftErrors, rightErrors));
+			return new RosettaInterpreterValueEnvironmentTuple(
+					RosettaInterpreterErrorValue.merge(List.of(leftErrors, rightErrors)), env);
 		}
 			
 		if (expr.getOperator().equals("and")) {
-			return new RosettaInterpreterBooleanValue(leftBool && rightBool);
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterBooleanValue(leftBool && rightBool), env);
 		} else if (expr.getOperator().equals("or")) {
-			return new RosettaInterpreterBooleanValue(leftBool || rightBool);
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterBooleanValue(leftBool || rightBool), env);
 		} else {
 			// Wrong logical operator -> only "and" / "or" supported
-			return new RosettaInterpreterErrorValue(
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterErrorValue(
 					new RosettaInterpreterError(
 					"Logical Operation: Wrong operator "
-					+ "- only 'and' / 'or' supported"));
+					+ "- only 'and' / 'or' supported")), env);
 		}
 	}
 	

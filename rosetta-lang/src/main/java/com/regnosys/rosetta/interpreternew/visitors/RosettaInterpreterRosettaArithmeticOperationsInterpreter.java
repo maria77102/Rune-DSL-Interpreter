@@ -8,6 +8,7 @@ import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterIntegerValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterNumberValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterStringValue;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
 import com.regnosys.rosetta.rosetta.RosettaInterpreterBaseEnvironment;
 import com.regnosys.rosetta.rosetta.expression.ArithmeticOperation;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
@@ -18,30 +19,29 @@ public class RosettaInterpreterRosettaArithmeticOperationsInterpreter
 					extends RosettaInterpreterConcreteInterpreter {
 	
 	
-	public RosettaInterpreterValue interp(ArithmeticOperation expr) {
-		return interp(expr, new RosettaInterpreterEnvironment());
-	}
-	
 	/**
 	 * Interprets an arithmetic operation, evaluating the operation between the two terms.
 	 *
 	 * @param expr The ArithmeticOperation expression to interpret
 	 * @return If no errors are encountered, a RosettaInterpreterNumberValue or
 	 * 		   RosettaInterpreterStringValue representing
-	 * 		   the result of the arithmetic/concatenation operation.
+	 * 		   the result of the arithmetic/concatenation operation, 
+	 * 		   alongside the current environment, contained in RosettaInterpreterValueEnvironmentTuple
 	 * 		   If errors are encountered, a RosettaInterpreterErrorValue representing
      *         the error.
 	 */
-	public RosettaInterpreterValue interp(ArithmeticOperation expr,
-			RosettaInterpreterBaseEnvironment env) {
+	public RosettaInterpreterValueEnvironmentTuple interp(ArithmeticOperation expr,
+			RosettaInterpreterEnvironment env) {
 		
 		String leftString = null;
 		String rightString = null;
 		
 		RosettaExpression left = expr.getLeft();
 		RosettaExpression right = expr.getRight();
-		RosettaInterpreterValue leftInterpreted = left.accept(visitor, env);
-		RosettaInterpreterValue rightInterpreted = right.accept(visitor, env); 
+		RosettaInterpreterValue leftInterpreted = ((RosettaInterpreterValueEnvironmentTuple)left
+				.accept(visitor, env)).getValue();
+		RosettaInterpreterValue rightInterpreted = ((RosettaInterpreterValueEnvironmentTuple)right
+				.accept(visitor, env)).getValue(); 
 		
 		if (!(leftInterpreted instanceof RosettaInterpreterNumberValue 
 				|| leftInterpreted instanceof RosettaInterpreterStringValue 
@@ -55,7 +55,8 @@ public class RosettaInterpreterRosettaArithmeticOperationsInterpreter
 					checkForErrors(leftInterpreted, "Leftside");
 			RosettaInterpreterErrorValue rightErrors = 
 					checkForErrors(rightInterpreted, "Rightside");
-			return RosettaInterpreterErrorValue.merge(List.of(leftErrors, rightErrors));
+			return new RosettaInterpreterValueEnvironmentTuple(
+				RosettaInterpreterErrorValue.merge(List.of(leftErrors, rightErrors)), env);
 		}
 		
 		boolean sameType = 
@@ -64,10 +65,10 @@ public class RosettaInterpreterRosettaArithmeticOperationsInterpreter
 				|| (!(leftInterpreted instanceof RosettaInterpreterStringValue)
 				&& !(rightInterpreted instanceof RosettaInterpreterStringValue)); 
 		if (!sameType) {
-			return new RosettaInterpreterErrorValue(
+			return new RosettaInterpreterValueEnvironmentTuple(new RosettaInterpreterErrorValue(
 					new RosettaInterpreterError(
 				"The terms of the operation "
-				+ "are neither both strings nor both numbers"));
+				+ "are neither both strings nor both numbers")), env);
 			}
 			
 		if (leftInterpreted instanceof RosettaInterpreterStringValue) {
@@ -76,13 +77,14 @@ public class RosettaInterpreterRosettaArithmeticOperationsInterpreter
 			rightString = ((RosettaInterpreterStringValue) rightInterpreted)
 					.getValue();
 			if (expr.getOperator().equals("+")) {
-				return new RosettaInterpreterStringValue(leftString + rightString);
+				return new RosettaInterpreterValueEnvironmentTuple(
+						new RosettaInterpreterStringValue(leftString + rightString), env);
 				}
 			else {
-				return new RosettaInterpreterErrorValue(
+				return new RosettaInterpreterValueEnvironmentTuple(new RosettaInterpreterErrorValue(
 					new RosettaInterpreterError(
 				"The terms are strings but the operation "
-				+ "is not concatenation: not implemented"));
+				+ "is not concatenation: not implemented")), env);
 			}
 		}
 		
@@ -105,17 +107,21 @@ public class RosettaInterpreterRosettaArithmeticOperationsInterpreter
 					.getValue());
 		}
 		if (expr.getOperator().equals("+")) {
-			return new RosettaInterpreterNumberValue((leftNumber
-					.add(rightNumber)).bigDecimalValue());
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterNumberValue((leftNumber
+					.add(rightNumber)).bigDecimalValue()), env);
 		} else if (expr.getOperator().equals("-")) {
-			return new RosettaInterpreterNumberValue((leftNumber
-					.subtract(rightNumber)).bigDecimalValue());
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterNumberValue((leftNumber
+					.subtract(rightNumber)).bigDecimalValue()), env);
 		} else if (expr.getOperator().equals("*")) {
-			return new RosettaInterpreterNumberValue((leftNumber
-					.multiply(rightNumber)).bigDecimalValue());
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterNumberValue((leftNumber
+					.multiply(rightNumber)).bigDecimalValue()), env);
 		} else {
-			return new RosettaInterpreterNumberValue((leftNumber
-					.divide(rightNumber)).bigDecimalValue());
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterNumberValue((leftNumber
+					.divide(rightNumber)).bigDecimalValue()), env);
 		}
 	}
 	

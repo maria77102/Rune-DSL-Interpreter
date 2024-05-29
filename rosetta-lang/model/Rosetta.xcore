@@ -93,6 +93,9 @@ class TypeCallArgument {
 abstract class RosettaInterpreterBaseEnvironment {
 }
 
+abstract class RosettaInterpreterTuple {
+}
+
 
 /**********************************************************************
  * Built-in

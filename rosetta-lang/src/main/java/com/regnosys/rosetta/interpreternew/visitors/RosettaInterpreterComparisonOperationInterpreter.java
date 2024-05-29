@@ -10,6 +10,7 @@ import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterEnvironment;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterError;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterListValue;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
 import com.regnosys.rosetta.rosetta.RosettaInterpreterBaseEnvironment;
 import com.regnosys.rosetta.rosetta.expression.ModifiableBinaryOperation;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
@@ -32,19 +33,6 @@ public class RosettaInterpreterComparisonOperationInterpreter extends
 					"com.regnosys.rosetta.interpreternew.values."
 					+ "RosettaInterpreterStringValue");
 	
-	/**
-	 * Interprets a comparison operation, evaluating the comparison between two operands.
-	 *
-	 * @param expr The ComparisonOperation expression to interpret
-	 * @return If no errors are encountered, a RosettaInterpreterBooleanValue representing
-	 * 		   the result of the comparison operation.
-	 * 		   If errors are encountered, a RosettaInterpreterErrorValue representing
-     *         the error.
-	 */
-	public RosettaInterpreterBaseValue interp(ModifiableBinaryOperation expr) {
-		return interp(expr, new RosettaInterpreterEnvironment());
-	}
-	
 	
 	/**
 	 * Interprets a comparison operation, evaluating the comparison between two operands.
@@ -57,30 +45,36 @@ public class RosettaInterpreterComparisonOperationInterpreter extends
 	 * 		   If errors are encountered, a RosettaInterpreterErrorValue representing
      *         the error.
 	 */
-	public RosettaInterpreterBaseValue interp(ModifiableBinaryOperation expr,
-			RosettaInterpreterBaseEnvironment env) {		
+	public RosettaInterpreterValueEnvironmentTuple interp(ModifiableBinaryOperation expr,
+			RosettaInterpreterEnvironment env) {		
 		if (!comparisonOperators.contains(expr.getOperator())) {
-			return new RosettaInterpreterErrorValue(
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterErrorValue(
 					new RosettaInterpreterError(
-							"operator not suppported")); 
+							"operator not suppported")), env); 
 		}
 		RosettaExpression left = expr.getLeft();
 		RosettaExpression right = expr.getRight();
 		
-		RosettaInterpreterValue leftValue = left.accept(visitor, env);
-		RosettaInterpreterValue rightValue = right.accept(visitor, env);
+		RosettaInterpreterValue leftValue = ((RosettaInterpreterValueEnvironmentTuple)left
+				.accept(visitor, env)).getValue();
+		RosettaInterpreterValue rightValue = ((RosettaInterpreterValueEnvironmentTuple)right
+				.accept(visitor, env)).getValue(); 
 		
 		if (RosettaInterpreterErrorValue.errorsExist(leftValue)
 				&& RosettaInterpreterErrorValue.errorsExist(rightValue)) {
-			return RosettaInterpreterErrorValue
+			return new RosettaInterpreterValueEnvironmentTuple(
+					RosettaInterpreterErrorValue
 					.merge((RosettaInterpreterErrorValue)leftValue,
-					(RosettaInterpreterErrorValue)rightValue);
+					(RosettaInterpreterErrorValue)rightValue), env);
 		}
 		else if (RosettaInterpreterErrorValue.errorsExist(leftValue)) {
-			return (RosettaInterpreterErrorValue)leftValue;
+			return new RosettaInterpreterValueEnvironmentTuple(
+					(RosettaInterpreterErrorValue)leftValue, env);
 		}
 		else if (RosettaInterpreterErrorValue.errorsExist(rightValue)) {
-			return (RosettaInterpreterErrorValue)rightValue;
+			return new RosettaInterpreterValueEnvironmentTuple(
+					(RosettaInterpreterErrorValue)rightValue, env);
 		}
 		
 		//check cardinality operation
@@ -90,19 +84,23 @@ public class RosettaInterpreterComparisonOperationInterpreter extends
 			boolean result = checkComparableTypes(leftValue, 
 					rightValue, 
 					expr.getOperator());
-			return new RosettaInterpreterBooleanValue(result);
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterBooleanValue(result), env);
 		
 		case ANY:
-			return compareAny(leftValue, rightValue, expr.getOperator());
+			return new RosettaInterpreterValueEnvironmentTuple(
+					compareAny(leftValue, rightValue, expr.getOperator()), env);
 			
 		case ALL:
-			return compareAll(leftValue, rightValue, expr.getOperator());
+			return new RosettaInterpreterValueEnvironmentTuple(
+					compareAll(leftValue, rightValue, expr.getOperator()), env);
 
 		default:
-			return new RosettaInterpreterErrorValue(
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterErrorValue(
 					new RosettaInterpreterError(
 							"cardinality modifier " + expr.getCardMod()
-							+ " not supported"));
+							+ " not supported")), env);
 			
 		}
 	}

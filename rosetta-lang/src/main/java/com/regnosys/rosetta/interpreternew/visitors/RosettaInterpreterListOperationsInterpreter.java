@@ -10,6 +10,7 @@ import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterEnvironment;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterError;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterStringValue;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
 import com.regnosys.rosetta.rosetta.RosettaInterpreterBaseEnvironment;
 import com.regnosys.rosetta.rosetta.expression.JoinOperation;
 import com.regnosys.rosetta.rosetta.expression.RosettaContainsExpression;
@@ -20,10 +21,6 @@ import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
 public class RosettaInterpreterListOperationsInterpreter
 	extends RosettaInterpreterConcreteInterpreter {
 
-	public RosettaInterpreterValue interp(RosettaContainsExpression exp) {
-		return interp(exp, new RosettaInterpreterEnvironment());
-	}
-
 	/**
 	 * Interprets a rosetta contains expression.
 	 * Checks if the right element, which may be a single element or a list,
@@ -32,21 +29,25 @@ public class RosettaInterpreterListOperationsInterpreter
 	 * @param exp - expression to evaluate
 	 * @return value of contains expression
 	 */
-	public RosettaInterpreterValue interp(RosettaContainsExpression exp,
-			RosettaInterpreterBaseEnvironment env) {
+	public RosettaInterpreterValueEnvironmentTuple interp(RosettaContainsExpression exp,
+			RosettaInterpreterEnvironment env) {
 		RosettaExpression leftExp = exp.getLeft();
 		RosettaExpression rightExp = exp.getRight();
 		
-		RosettaInterpreterValue leftVal = leftExp.accept(visitor, env);
-		RosettaInterpreterValue rightVal = rightExp.accept(visitor, env);
+		RosettaInterpreterValue leftVal = ((RosettaInterpreterValueEnvironmentTuple)leftExp
+				.accept(visitor, env)).getValue();
+		RosettaInterpreterValue rightVal = ((RosettaInterpreterValueEnvironmentTuple)rightExp
+				.accept(visitor, env)).getValue(); 
 		
 		if (RosettaInterpreterErrorValue.errorsExist(leftVal, rightVal)) {
-			return RosettaInterpreterErrorValue.merge(leftVal, rightVal);
+			return new RosettaInterpreterValueEnvironmentTuple(
+					RosettaInterpreterErrorValue.merge(leftVal, rightVal), env);
 		}
 		
 		if (RosettaInterpreterBaseValue.valueStream(rightVal).count() < 1L
 				|| RosettaInterpreterBaseValue.valueStream(leftVal).count() < 1L) {
-			return new RosettaInterpreterBooleanValue(false);
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterBooleanValue(false), env);
 		}
 		
 		HashSet<RosettaInterpreterValue> leftValueSet = new HashSet<>(
@@ -56,11 +57,8 @@ public class RosettaInterpreterListOperationsInterpreter
 		boolean contains = RosettaInterpreterBaseValue.valueStream(rightVal)
 				.allMatch(x -> leftValueSet.contains(x));
 		
-		return new RosettaInterpreterBooleanValue(contains);
-	}
-	
-	public RosettaInterpreterValue interp(RosettaDisjointExpression exp) {
-		return interp(exp, new RosettaInterpreterEnvironment());
+		return new RosettaInterpreterValueEnvironmentTuple(
+				new RosettaInterpreterBooleanValue(contains), env);
 	}
 	
 	/**
@@ -71,21 +69,25 @@ public class RosettaInterpreterListOperationsInterpreter
 	 * @param exp - expression to evaluate
 	 * @return value of contains expression
 	 */
-	public RosettaInterpreterValue interp(RosettaDisjointExpression exp,
-			RosettaInterpreterBaseEnvironment env) {
+	public RosettaInterpreterValueEnvironmentTuple interp(RosettaDisjointExpression exp,
+			RosettaInterpreterEnvironment env) {
 		RosettaExpression leftExp = exp.getLeft();
 		RosettaExpression rightExp = exp.getRight();
 		
-		RosettaInterpreterValue leftVal = leftExp.accept(visitor, env);
-		RosettaInterpreterValue rightVal = rightExp.accept(visitor, env);
+		RosettaInterpreterValue leftVal = ((RosettaInterpreterValueEnvironmentTuple)leftExp
+				.accept(visitor, env)).getValue();
+		RosettaInterpreterValue rightVal = ((RosettaInterpreterValueEnvironmentTuple)rightExp
+				.accept(visitor, env)).getValue(); 
 		
 		if (RosettaInterpreterErrorValue.errorsExist(leftVal, rightVal)) {
-			return RosettaInterpreterErrorValue.merge(leftVal, rightVal);
+			return new RosettaInterpreterValueEnvironmentTuple(
+					RosettaInterpreterErrorValue.merge(leftVal, rightVal), env);
 		}
 		
 		if (RosettaInterpreterBaseValue.valueStream(rightVal).count() < 1L 
 				|| RosettaInterpreterBaseValue.valueStream(leftVal).count() < 1L) {
-			return new RosettaInterpreterBooleanValue(true);
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterBooleanValue(true), env);
 		}
 		
 		HashSet<RosettaInterpreterValue> rightValueSet = new HashSet<>(
@@ -95,11 +97,8 @@ public class RosettaInterpreterListOperationsInterpreter
 		boolean notContains = RosettaInterpreterBaseValue.valueStream(leftVal)
 				.allMatch(x -> !rightValueSet.contains(x));
 		
-		return new RosettaInterpreterBooleanValue(notContains);
-	}
-	
-	public RosettaInterpreterValue interp(JoinOperation exp) {
-		return interp(exp, new RosettaInterpreterEnvironment());
+		return new RosettaInterpreterValueEnvironmentTuple(
+				new RosettaInterpreterBooleanValue(notContains), env);
 	}
 
 	/**
@@ -110,35 +109,41 @@ public class RosettaInterpreterListOperationsInterpreter
 	 * @param exp - join operation to interpret
 	 * @return concatenated string
 	 */
-	public RosettaInterpreterValue interp(JoinOperation exp,
-			RosettaInterpreterBaseEnvironment env) {
+	public RosettaInterpreterValueEnvironmentTuple interp(JoinOperation exp,
+			RosettaInterpreterEnvironment env) {
 		RosettaExpression stringsExp = exp.getLeft();
 		RosettaExpression delimExp = exp.getRight();
 		
-		RosettaInterpreterValue stringsVal = stringsExp.accept(visitor, env);
-		RosettaInterpreterValue delimVal = delimExp.accept(visitor, env);
+		RosettaInterpreterValue stringsVal = ((RosettaInterpreterValueEnvironmentTuple)stringsExp
+				.accept(visitor, env)).getValue();
+		RosettaInterpreterValue delimVal = ((RosettaInterpreterValueEnvironmentTuple)delimExp
+				.accept(visitor, env)).getValue();
 		
 		if (RosettaInterpreterErrorValue.errorsExist(stringsVal, delimVal)) {
-			return RosettaInterpreterErrorValue.merge(stringsVal, delimVal);
+			return new RosettaInterpreterValueEnvironmentTuple(
+					RosettaInterpreterErrorValue.merge(stringsVal, delimVal), env);
 		}
 		
 		boolean allStrings = RosettaInterpreterBaseValue.valueStream(stringsVal)
 				.allMatch(x -> x instanceof RosettaInterpreterStringValue);
 		
 		if (!allStrings) {
-			return new RosettaInterpreterErrorValue(
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterErrorValue(
 					new RosettaInterpreterError("The list of values for a join "
-							+ "operation must be a list of strings"));
+							+ "operation must be a list of strings")), env);
 		}
 		if (!(delimVal instanceof RosettaInterpreterStringValue)) {
-			return new RosettaInterpreterErrorValue(
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterErrorValue(
 					new RosettaInterpreterError("The delimiter for a join"
-							+ " operation must be a string"));
+							+ " operation must be a string")), env);
 		}
 		
 		if (RosettaInterpreterBaseValue.valueStream(stringsVal)
 				.count() < 1L) {
-			return new RosettaInterpreterStringValue("");
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterStringValue(""), env);
 		}
 		
 		String delimString = ((RosettaInterpreterStringValue)delimVal).getValue();
@@ -148,7 +153,8 @@ public class RosettaInterpreterListOperationsInterpreter
 		
 		String result = String.join(delimString, texts);
 		
-		return new RosettaInterpreterStringValue(result);
+		return new RosettaInterpreterValueEnvironmentTuple(
+				new RosettaInterpreterStringValue(result), env);
 	}
 		
 }
