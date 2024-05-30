@@ -15,7 +15,6 @@ import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterIntegerValue
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterListValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterNumberValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
-import com.regnosys.rosetta.rosetta.RosettaInterpreterBaseEnvironment;
 import com.regnosys.rosetta.rosetta.expression.DistinctOperation;
 import com.regnosys.rosetta.rosetta.expression.FirstOperation;
 import com.regnosys.rosetta.rosetta.expression.LastOperation;
@@ -24,6 +23,7 @@ import com.regnosys.rosetta.rosetta.expression.RosettaAbsentExpression;
 import com.regnosys.rosetta.rosetta.expression.RosettaCountOperation;
 import com.regnosys.rosetta.rosetta.expression.RosettaExistsExpression;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
+import com.regnosys.rosetta.rosetta.expression.RosettaOnlyElement;
 import com.regnosys.rosetta.rosetta.expression.SumOperation;
 import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
 import com.rosetta.model.lib.RosettaNumber;
@@ -148,6 +148,43 @@ public class RosettaInterpreterListOperatorInterpreter
 					.collect(Collectors.toList()).get(0), env);
 		}
 	}
+	
+	/**
+	 * Interprets a only-element operation.
+	 * If a list has exactly one element, it returns it.
+	 * Otherwise, it returns an error.
+	 *
+	 * @param exp Expression on which to perform 'only-element' operation
+	 * @return The single element of the list
+	 */
+	public RosettaInterpreterValueEnvironmentTuple interp(RosettaOnlyElement exp, 
+			RosettaInterpreterEnvironment env) {
+		RosettaExpression argument = exp.getArgument();
+		RosettaInterpreterValue interpretedArgument = ((RosettaInterpreterValueEnvironmentTuple)argument
+				.accept(visitor, env)).getValue();
+		
+		if (RosettaInterpreterErrorValue.errorsExist(interpretedArgument)) {
+			return new RosettaInterpreterValueEnvironmentTuple(
+					interpretedArgument, env);
+		}
+		
+		long count = RosettaInterpreterBaseValue.valueStream(interpretedArgument).count();
+		if (count == 0L) {
+			// List is empty
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterErrorValue(
+					new RosettaInterpreterError("List is empty")), env);
+		} else if (count == 1L) { 
+			// List has one element
+			return new RosettaInterpreterValueEnvironmentTuple(
+					RosettaInterpreterBaseValue.valueStream(interpretedArgument)
+					.collect(Collectors.toList()).get(0), env);
+		} else {
+			return new RosettaInterpreterValueEnvironmentTuple(
+					new RosettaInterpreterErrorValue(
+					new RosettaInterpreterError("List contains more than one element")), env);
+		}
+	}
 
 	
 	/**
@@ -180,7 +217,7 @@ public class RosettaInterpreterListOperatorInterpreter
 					.collect(Collectors.toList()).get((int)count - 1), env);
 		}
 	}
-
+	
 	/**
 	 * Interprets a Distinct Operation.
 	 * Returns a list where duplicate elements are removed

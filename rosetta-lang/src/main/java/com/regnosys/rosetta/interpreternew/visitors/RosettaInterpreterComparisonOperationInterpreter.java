@@ -11,7 +11,6 @@ import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterError;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterListValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
-import com.regnosys.rosetta.rosetta.RosettaInterpreterBaseEnvironment;
 import com.regnosys.rosetta.rosetta.expression.ModifiableBinaryOperation;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
 import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;

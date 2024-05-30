@@ -19,8 +19,8 @@ import com.regnosys.rosetta.rosetta.expression.RosettaDisjointExpression;
 import com.regnosys.rosetta.rosetta.expression.RosettaExistsExpression;
 import com.regnosys.rosetta.rosetta.expression.RosettaConditionalExpression;
 import com.regnosys.rosetta.rosetta.expression.RosettaIntLiteral;
-import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
 import com.regnosys.rosetta.rosetta.expression.RosettaNumberLiteral;
+import com.regnosys.rosetta.rosetta.expression.RosettaOnlyElement;
 import com.regnosys.rosetta.rosetta.expression.RosettaPatternLiteral;
 import com.regnosys.rosetta.rosetta.expression.RosettaStringLiteral;
 import com.regnosys.rosetta.rosetta.expression.RosettaSymbolReference;
@@ -160,6 +160,13 @@ public class RosettaInterpreterVisitor extends RosettaInterpreterVisitorBase {
 	
 	@Override
 	public RosettaInterpreterValueEnvironmentTuple interp(RosettaAbsentExpression exp, 
+			RosettaInterpreterBaseEnvironment env) {
+		return new RosettaInterpreterListOperatorInterpreter().interp(exp,
+				(RosettaInterpreterEnvironment) env);
+	}
+	
+	@Override
+	public RosettaInterpreterValueEnvironmentTuple interp(RosettaOnlyElement exp, 
 			RosettaInterpreterBaseEnvironment env) {
 		return new RosettaInterpreterListOperatorInterpreter().interp(exp,
 				(RosettaInterpreterEnvironment) env);

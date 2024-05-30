@@ -130,7 +130,7 @@ class RosettaInterpreterListOperationsInterpreterTest {
 		String msg = "[\"abc\", \"cde\"] join \", \"";
 		RosettaExpression msgExp = parser.parseExpression(msg);
 		validation.assertNoIssues(msgExp);
-		RosettaInterpreterStringValue val =(RosettaInterpreterStringValue)
+		RosettaInterpreterStringValue val = (RosettaInterpreterStringValue)
 				(((RosettaInterpreterValueEnvironmentTuple)
 					interpreter.interp(msgExp)).getValue());
 		assertEquals("abc, cde", val.getValue());
@@ -141,7 +141,7 @@ class RosettaInterpreterListOperationsInterpreterTest {
 		String msg = "[] join \", \"";
 		RosettaExpression msgExp = parser.parseExpression(msg);
 		validation.assertNoIssues(msgExp);
-		RosettaInterpreterStringValue val =(RosettaInterpreterStringValue)
+		RosettaInterpreterStringValue val = (RosettaInterpreterStringValue)
 				(((RosettaInterpreterValueEnvironmentTuple)
 					interpreter.interp(msgExp)).getValue());
 		assertEquals("", val.getValue());
@@ -152,7 +152,7 @@ class RosettaInterpreterListOperationsInterpreterTest {
 		String msg = "[\"a\"] join \", \"";
 		RosettaExpression msgExp = parser.parseExpression(msg);
 		validation.assertNoIssues(msgExp);
-		RosettaInterpreterStringValue val =(RosettaInterpreterStringValue)
+		RosettaInterpreterStringValue val = (RosettaInterpreterStringValue)
 				(((RosettaInterpreterValueEnvironmentTuple)
 					interpreter.interp(msgExp)).getValue());
 		assertEquals("a", val.getValue());
@@ -163,7 +163,7 @@ class RosettaInterpreterListOperationsInterpreterTest {
 		String msg = "[\"a\", \"b\"] join \"\"";
 		RosettaExpression msgExp = parser.parseExpression(msg);
 		validation.assertNoIssues(msgExp);
-		RosettaInterpreterStringValue val =(RosettaInterpreterStringValue)
+		RosettaInterpreterStringValue val = (RosettaInterpreterStringValue)
 				(((RosettaInterpreterValueEnvironmentTuple)
 					interpreter.interp(msgExp)).getValue());
 		assertEquals("ab", val.getValue());
@@ -174,7 +174,7 @@ class RosettaInterpreterListOperationsInterpreterTest {
 		String msg = "[\"abc\", \"cde\", \"cde\", \"cde\"] join \", \"";
 		RosettaExpression msgExp = parser.parseExpression(msg);
 		validation.assertNoIssues(msgExp);
-		RosettaInterpreterStringValue val =(RosettaInterpreterStringValue)
+		RosettaInterpreterStringValue val = (RosettaInterpreterStringValue)
 				(((RosettaInterpreterValueEnvironmentTuple)
 					interpreter.interp(msgExp)).getValue());
 		assertEquals("abc, cde, cde, cde", val.getValue());

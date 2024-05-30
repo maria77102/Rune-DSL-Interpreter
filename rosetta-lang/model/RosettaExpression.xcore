@@ -345,6 +345,9 @@ class RosettaAbsentExpression extends RosettaUnaryOperation {
 }
 
 class RosettaOnlyElement extends ListOperation {
+	op RosettaInterpreterTuple accept(InterpreterVisitor v, RosettaInterpreterBaseEnvironment nv) {
+		v.interp(this,nv)
+	}
 }
 
 class RosettaCountOperation extends RosettaUnaryOperation {

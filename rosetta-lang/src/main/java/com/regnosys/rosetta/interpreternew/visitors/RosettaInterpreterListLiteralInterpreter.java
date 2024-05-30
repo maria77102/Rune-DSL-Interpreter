@@ -3,7 +3,6 @@ package com.regnosys.rosetta.interpreternew.visitors;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterBaseValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterEnvironment;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterListValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
