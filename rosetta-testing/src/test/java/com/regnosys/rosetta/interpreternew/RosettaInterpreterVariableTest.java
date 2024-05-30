@@ -21,6 +21,7 @@ import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterEnvironment;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterError;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterIntegerValue;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
 import com.regnosys.rosetta.rosetta.expression.ExpressionFactory;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
 import com.regnosys.rosetta.rosetta.expression.impl.ExpressionFactoryImpl;
@@ -59,8 +60,9 @@ public class RosettaInterpreterVariableTest {
 		//give the same environment to the parser
 		RosettaExpression expr = parser.parseExpression("a >= 2", 
 				List.of("a int (1..1)"));
-		
-		RosettaInterpreterValue val = interpreter.interp(expr,env);
+
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr, env)).getValue();
 		
 		assertTrue(((RosettaInterpreterBooleanValue)val).getValue());
 	}
@@ -80,8 +82,9 @@ public class RosettaInterpreterVariableTest {
 		//give a different environment to the parser
 		RosettaExpression expr = parser.parseExpression("b >= 2", 
 				List.of("b int (1..1)"));
-		
-		RosettaInterpreterValue val = interpreter.interp(expr,env);
+
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr, env)).getValue();
 		
 		assertEquals(expectedError.getErrors().get(0).getMessage(),
 				((RosettaInterpreterErrorValue)val)
@@ -100,8 +103,9 @@ public class RosettaInterpreterVariableTest {
 		//give a different environment to the parser
 		RosettaExpression expr = parser.parseExpression("1 = b", 
 				List.of("b int (1..1)"));
-		
-		RosettaInterpreterValue val = interpreter.interp(expr,env);
+
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr, env)).getValue();
 		
 		assertEquals(expectedError.getErrors().get(0).getMessage(),
 				((RosettaInterpreterErrorValue)val)
@@ -122,8 +126,9 @@ public class RosettaInterpreterVariableTest {
 		//give a different environment to the parser
 		RosettaExpression expr = parser.parseExpression("a <= b", 
 				List.of("a int (1..1)", "b int (1..1)"));
-		
-		RosettaInterpreterValue val = interpreter.interp(expr,env);
+
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr, env)).getValue();
 		
 		EList<RosettaInterpreterBaseError> errors = 
 				((RosettaInterpreterErrorValue) val).getErrors();

@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterBooleanValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterError;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
 import com.regnosys.rosetta.rosetta.expression.ExpressionFactory;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
 import com.regnosys.rosetta.rosetta.expression.impl.ExpressionFactoryImpl;
@@ -41,28 +42,32 @@ public class RosettaInterpreterComparisonTest {
 	@Test
 	public void nestedTest() {
 		RosettaExpression expr = parser.parseExpression("True = (1 < 3)");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	
 	@Test
 	public void intSmallerTest() {
 		RosettaExpression expr = parser.parseExpression("1 < 2");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	
 	@Test
 	public void stringBiggerTest() {
 		RosettaExpression expr = parser.parseExpression("\"bro\" > \"dude\"");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertFalse(((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	
 	@Test
 	public void booleanLessEqualTest() {
 		RosettaExpression expr = parser.parseExpression("False <= False");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	
@@ -72,7 +77,8 @@ public class RosettaInterpreterComparisonTest {
 				new RosettaInterpreterError(
 						"cannot compare two lists"));
 		RosettaExpression expr = parser.parseExpression("[1,2,3] all >= [0]");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals(expectedError.getErrors().get(0).getMessage(),
 				((RosettaInterpreterErrorValue)val)
 					.getErrors().get(0).getMessage());
@@ -81,14 +87,16 @@ public class RosettaInterpreterComparisonTest {
 	@Test
 	public void cardinalityAllSimpleTest() {
 		RosettaExpression expr = parser.parseExpression("[1,2,3] all < 4");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	
 	@Test
 	public void cardinalityAnySimpleTest() {
 		RosettaExpression expr = parser.parseExpression("[1,2,3] any > 2");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	
@@ -98,12 +106,12 @@ public class RosettaInterpreterComparisonTest {
 				new RosettaInterpreterError(
 						"cannot compare two lists"));
 		RosettaExpression expr = parser.parseExpression("[1,2,3] any <= [1,2]");
-		RosettaInterpreterValue val = interpreter.interp(expr);
-		assertEquals(expectedError.getErrors(),
-				((RosettaInterpreterErrorValue)val).getErrors());
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
+		assertEquals(expectedError.getErrors(), ((RosettaInterpreterErrorValue)val).getErrors());
 		assertEquals(expectedError.getErrors().get(0).getMessage(),
 				((RosettaInterpreterErrorValue)val)
-					.getErrors().get(0).getMessage());
+				.getErrors().get(0).getMessage());
 	}
 	
 	@Test
@@ -113,8 +121,9 @@ public class RosettaInterpreterComparisonTest {
 						"cannot use \"ALL\" keyword "
 								+ "to compare two elements"));
 		RosettaExpression expr = parser.parseExpression("1 all > 3");
-		RosettaInterpreterValue val = interpreter.interp(expr);
-		RosettaInterpreterErrorValue errorVal = (RosettaInterpreterErrorValue) val;
+		RosettaInterpreterErrorValue errorVal = (RosettaInterpreterErrorValue)
+				((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals(expectedError.getErrors(),
 				(errorVal.getErrors()));
 		

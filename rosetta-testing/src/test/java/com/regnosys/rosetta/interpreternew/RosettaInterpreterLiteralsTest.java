@@ -19,6 +19,7 @@ import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterIntegerValue
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterListValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterNumberValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterStringValue;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
 import com.regnosys.rosetta.rosetta.expression.ExpressionFactory;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
 import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
@@ -49,7 +50,8 @@ public class RosettaInterpreterLiteralsTest {
 	@Test
 	public void booleanTest() {
 		RosettaExpression expr = parser.parseExpression("True");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals(true, ((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	 
@@ -57,7 +59,8 @@ public class RosettaInterpreterLiteralsTest {
 	public void listTest() {
 		RosettaExpression expr = parser.parseExpression("[1,2]");
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterListValue expected = 
 				new RosettaInterpreterListValue(List.of(
 						new RosettaInterpreterIntegerValue(
@@ -72,7 +75,8 @@ public class RosettaInterpreterLiteralsTest {
 	public void nestedListTest() {
 		RosettaExpression expr = parser.parseExpression("[1,[2,3]]");
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterListValue expected = 
 				new RosettaInterpreterListValue(List.of(
 						new RosettaInterpreterIntegerValue(
@@ -89,7 +93,8 @@ public class RosettaInterpreterLiteralsTest {
 	public void veryNestedListTest() {
 		RosettaExpression expr = parser.parseExpression("[1,[2,[3, [4, [5]]]]]");
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterListValue expected = 
 				new RosettaInterpreterListValue(List.of(
 						new RosettaInterpreterIntegerValue(
@@ -109,7 +114,8 @@ public class RosettaInterpreterLiteralsTest {
 	@Test
 	public void intTest() {
 		RosettaExpression expr = parser.parseExpression("5");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals(BigInteger.valueOf(5),
 				((RosettaInterpreterIntegerValue)val).getValue());
 	}
@@ -117,14 +123,17 @@ public class RosettaInterpreterLiteralsTest {
 	@Test
 	public void numberTest() {
 		RosettaExpression expr = parser.parseExpression("5.5");
-		RosettaInterpreterValue val = interpreter.interp(expr);
-		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(5.5)), ((RosettaInterpreterNumberValue)val).getValue());
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
+		assertEquals(RosettaNumber.valueOf(BigDecimal
+				.valueOf(5.5)), ((RosettaInterpreterNumberValue)val).getValue());
 	}
 	
 	@Test
 	public void stringTest() {
 		RosettaExpression expr = parser.parseExpression("\"hello\"");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals("hello", ((RosettaInterpreterStringValue)val).getValue());
 	}
 }

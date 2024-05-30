@@ -19,6 +19,7 @@ import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterBooleanValue
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterError;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterStringValue;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
 import com.regnosys.rosetta.rosetta.expression.ExpressionFactory;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
 import com.regnosys.rosetta.rosetta.expression.impl.ExpressionFactoryImpl;
@@ -52,8 +53,8 @@ class RosettaInterpreterListOperationsInterpreterTest {
 				.collect(Collectors.toList());
 		expressionsParsed.stream().forEach(x -> validation.assertNoIssues(x));
 		expressionsParsed.stream().forEach(x -> {
-			assertEquals(expected,
-					interpreter.interp(x));
+			assertEquals(expected,((RosettaInterpreterValueEnvironmentTuple)
+					interpreter.interp(x)).getValue());
 		});
 	}
 	
@@ -85,7 +86,8 @@ class RosettaInterpreterListOperationsInterpreterTest {
 	void testInterpContainsError() {
 		RosettaExpression expr = parser.parseExpression("[1,2,3] contains (1 and False)");
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterErrorValue err = new RosettaInterpreterErrorValue(
 				new RosettaInterpreterError(
 				"Logical Operation: Leftside is not of type Boolean"));
@@ -115,7 +117,8 @@ class RosettaInterpreterListOperationsInterpreterTest {
 	void testInterpDisjointError() {
 		RosettaExpression expr = parser.parseExpression("[1,2,3] disjoint (1 and False)");
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterErrorValue err = new RosettaInterpreterErrorValue(
 				new RosettaInterpreterError(
 				"Logical Operation: Leftside is not of type Boolean"));
@@ -127,8 +130,9 @@ class RosettaInterpreterListOperationsInterpreterTest {
 		String msg = "[\"abc\", \"cde\"] join \", \"";
 		RosettaExpression msgExp = parser.parseExpression(msg);
 		validation.assertNoIssues(msgExp);
-		RosettaInterpreterStringValue val =
-				(RosettaInterpreterStringValue)interpreter.interp(msgExp);
+		RosettaInterpreterStringValue val =(RosettaInterpreterStringValue)
+				(((RosettaInterpreterValueEnvironmentTuple)
+					interpreter.interp(msgExp)).getValue());
 		assertEquals("abc, cde", val.getValue());
 	}
 	
@@ -137,8 +141,9 @@ class RosettaInterpreterListOperationsInterpreterTest {
 		String msg = "[] join \", \"";
 		RosettaExpression msgExp = parser.parseExpression(msg);
 		validation.assertNoIssues(msgExp);
-		RosettaInterpreterStringValue val =
-				(RosettaInterpreterStringValue)interpreter.interp(msgExp);
+		RosettaInterpreterStringValue val =(RosettaInterpreterStringValue)
+				(((RosettaInterpreterValueEnvironmentTuple)
+					interpreter.interp(msgExp)).getValue());
 		assertEquals("", val.getValue());
 	}
 	
@@ -147,8 +152,9 @@ class RosettaInterpreterListOperationsInterpreterTest {
 		String msg = "[\"a\"] join \", \"";
 		RosettaExpression msgExp = parser.parseExpression(msg);
 		validation.assertNoIssues(msgExp);
-		RosettaInterpreterStringValue val =
-				(RosettaInterpreterStringValue)interpreter.interp(msgExp);
+		RosettaInterpreterStringValue val =(RosettaInterpreterStringValue)
+				(((RosettaInterpreterValueEnvironmentTuple)
+					interpreter.interp(msgExp)).getValue());
 		assertEquals("a", val.getValue());
 	}
 	
@@ -157,8 +163,9 @@ class RosettaInterpreterListOperationsInterpreterTest {
 		String msg = "[\"a\", \"b\"] join \"\"";
 		RosettaExpression msgExp = parser.parseExpression(msg);
 		validation.assertNoIssues(msgExp);
-		RosettaInterpreterStringValue val =
-				(RosettaInterpreterStringValue)interpreter.interp(msgExp);
+		RosettaInterpreterStringValue val =(RosettaInterpreterStringValue)
+				(((RosettaInterpreterValueEnvironmentTuple)
+					interpreter.interp(msgExp)).getValue());
 		assertEquals("ab", val.getValue());
 	}
 	
@@ -167,8 +174,9 @@ class RosettaInterpreterListOperationsInterpreterTest {
 		String msg = "[\"abc\", \"cde\", \"cde\", \"cde\"] join \", \"";
 		RosettaExpression msgExp = parser.parseExpression(msg);
 		validation.assertNoIssues(msgExp);
-		RosettaInterpreterStringValue val =
-				(RosettaInterpreterStringValue)interpreter.interp(msgExp);
+		RosettaInterpreterStringValue val =(RosettaInterpreterStringValue)
+				(((RosettaInterpreterValueEnvironmentTuple)
+					interpreter.interp(msgExp)).getValue());
 		assertEquals("abc, cde, cde, cde", val.getValue());
 	}
 	
@@ -177,7 +185,8 @@ class RosettaInterpreterListOperationsInterpreterTest {
 		String msg = "[\"abc\", \"cde\", 5, \"cde\"] join \", \"";
 		RosettaExpression msgExp = parser.parseExpression(msg);
 		validation.assertNoIssues(msgExp);
-		RosettaInterpreterValue val = interpreter.interp(msgExp);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(msgExp)).getValue();
 		assertTrue(val instanceof RosettaInterpreterErrorValue);
 	}
 	
@@ -186,7 +195,8 @@ class RosettaInterpreterListOperationsInterpreterTest {
 		String msg = "[\"abc\", \"cde\", \"cde\"] join 5";
 		RosettaExpression msgExp = parser.parseExpression(msg);
 		validation.assertNoIssues(msgExp);
-		RosettaInterpreterValue val = interpreter.interp(msgExp);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(msgExp)).getValue();
 		assertTrue(val instanceof RosettaInterpreterErrorValue);
 	}
 	
@@ -194,7 +204,8 @@ class RosettaInterpreterListOperationsInterpreterTest {
 	void testInterpJoinError() {
 		RosettaExpression expr = parser.parseExpression("[1,2,3] join (1 and False)");
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterErrorValue err = new RosettaInterpreterErrorValue(
 				new RosettaInterpreterError(
 				"Logical Operation: Leftside is not of type Boolean"));

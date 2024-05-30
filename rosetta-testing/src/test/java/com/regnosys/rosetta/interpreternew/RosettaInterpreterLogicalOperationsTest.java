@@ -19,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterBooleanValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterError;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
 import com.regnosys.rosetta.rosetta.expression.ExpressionFactory;
 import com.regnosys.rosetta.rosetta.expression.LogicalOperation;
 import com.regnosys.rosetta.rosetta.expression.RosettaBooleanLiteral;
@@ -85,42 +86,48 @@ public class RosettaInterpreterLogicalOperationsTest {
     @Test
     public void logicalAndInterpTestFalse() {
     	RosettaExpression expr = parser.parseExpression("True and False");
-        RosettaInterpreterValue result = interpreter.interp(expr);
+		RosettaInterpreterValue result = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
         assertBooleanResult(result, false);
     }
 
     @Test
     public void logicalAndInterpTestTrue() {
         RosettaExpression expr = parser.parseExpression("True and True");
-        RosettaInterpreterValue result = interpreter.interp(expr);
+		RosettaInterpreterValue result = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
         assertBooleanResult(result, true);
     }
     
     @Test
     public void logicalOrInterpTestTrue() {
     	RosettaExpression expr = parser.parseExpression("True or False");
-        RosettaInterpreterValue result = interpreter.interp(expr);
+		RosettaInterpreterValue result = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
         assertBooleanResult(result, true);
     }
     
     @Test
     public void logicalOrInterpTestTrue2() {
         RosettaExpression expr = parser.parseExpression("False or True");
-        RosettaInterpreterValue result = interpreter.interp(expr);
+		RosettaInterpreterValue result = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
         assertBooleanResult(result, true);
     }
 
     @Test
     public void logicalOrInterpTestFalse() {
         RosettaExpression expr = parser.parseExpression("False or False");
-        RosettaInterpreterValue result = interpreter.interp(expr);
+		RosettaInterpreterValue result = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
         assertBooleanResult(result, false);
     }   
 
     @Test
     public void nestedBooleansLogicalTest() {
         RosettaExpression expr = parser.parseExpression("(False and True) or (False and True)");
-        RosettaInterpreterValue result = interpreter.interp(expr);
+		RosettaInterpreterValue result = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
         assertBooleanResult(result, false);
     }
     
@@ -133,8 +140,9 @@ public class RosettaInterpreterLogicalOperationsTest {
     	RosettaBooleanLiteral trueLiteral = createBooleanLiteral(true);
     	RosettaBooleanLiteral falseLiteral = createBooleanLiteral(false);
     	LogicalOperation expr = createLogicalOperation("xor", trueLiteral, falseLiteral);
- 
-    	RosettaInterpreterValue result = interpreter.interp(expr);
+
+		RosettaInterpreterValue result = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
     	assertTrue(result instanceof RosettaInterpreterErrorValue);
     	RosettaInterpreterErrorValue castedResult = (RosettaInterpreterErrorValue) result;
     	compareErrors(expected, castedResult.getErrors());
@@ -147,7 +155,8 @@ public class RosettaInterpreterLogicalOperationsTest {
     			"Logical Operation: Leftside is not of type Boolean"));
     	
     	RosettaExpression expr = parser.parseExpression("1 and False");
-    	RosettaInterpreterValue result = interpreter.interp(expr);
+    	RosettaInterpreterValue result = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
     	assertTrue(result instanceof RosettaInterpreterErrorValue);
     	RosettaInterpreterErrorValue castedResult = (RosettaInterpreterErrorValue) result;
     	compareErrors(expected, castedResult.getErrors());
@@ -167,8 +176,8 @@ public class RosettaInterpreterLogicalOperationsTest {
     	
     	RosettaBooleanLiteral falseLiteral = createBooleanLiteral(false);
     	LogicalOperation nestedExpr = createLogicalOperation("and", falseLiteral, expr);
-    	
-    	RosettaInterpreterValue result = interpreter.interp(nestedExpr);
+    	RosettaInterpreterValue result = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(nestedExpr)).getValue();
     	assertTrue(result instanceof RosettaInterpreterErrorValue);
     	RosettaInterpreterErrorValue castedResult = (RosettaInterpreterErrorValue) result;
     	compareErrors(expected, castedResult.getErrors());
@@ -191,8 +200,8 @@ public class RosettaInterpreterLogicalOperationsTest {
     	RosettaStringLiteral stringLiteral = exFactory.createRosettaStringLiteral();
     	stringLiteral.setValue("string");
     	LogicalOperation nestedExpr = createLogicalOperation("and", stringLiteral, expr);
-    	
-    	RosettaInterpreterValue result = interpreter.interp(nestedExpr);
+    	RosettaInterpreterValue result = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(nestedExpr)).getValue();
     	assertTrue(result instanceof RosettaInterpreterErrorValue);
     	RosettaInterpreterErrorValue castedResult = (RosettaInterpreterErrorValue) result;
     	compareErrors(expected, castedResult.getErrors());

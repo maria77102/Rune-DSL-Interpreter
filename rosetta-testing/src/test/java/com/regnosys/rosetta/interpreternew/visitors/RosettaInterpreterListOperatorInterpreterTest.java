@@ -21,6 +21,7 @@ import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterIntegerValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterListValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterNumberValue;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
 import com.regnosys.rosetta.rosetta.expression.ExpressionFactory;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
 import com.regnosys.rosetta.rosetta.expression.impl.ExpressionFactoryImpl;
@@ -51,7 +52,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 	void testExistsTrue() {
 		RosettaInterpreterBooleanValue expected = new RosettaInterpreterBooleanValue(true);
 		RosettaExpression expr = parser.parseExpression("(True and False) exists");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterBooleanValue);
 		RosettaInterpreterBooleanValue castedVal = (RosettaInterpreterBooleanValue)val;
 		assertEquals(expected, castedVal);
@@ -61,7 +63,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 	void testExistsFalse() {
 		RosettaInterpreterBooleanValue expected = new RosettaInterpreterBooleanValue(false);
 		RosettaExpression expr = parser.parseExpression("[] exists");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterBooleanValue);
 		RosettaInterpreterBooleanValue castedVal = (RosettaInterpreterBooleanValue)val;
 		assertEquals(expected, castedVal);
@@ -71,7 +74,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 	void testExistsSingleTrue() {
 		RosettaInterpreterBooleanValue expected = new RosettaInterpreterBooleanValue(true);
 		RosettaExpression expr = parser.parseExpression("[1] single exists");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterBooleanValue);
 		RosettaInterpreterBooleanValue castedVal = (RosettaInterpreterBooleanValue)val;
 		assertEquals(expected, castedVal);
@@ -81,7 +85,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 	void testExistsSingleFalse() {
 		RosettaInterpreterBooleanValue expected = new RosettaInterpreterBooleanValue(false);
 		RosettaExpression expr = parser.parseExpression("[1,2] single exists");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterBooleanValue);
 		RosettaInterpreterBooleanValue castedVal = (RosettaInterpreterBooleanValue)val;
 		assertEquals(expected, castedVal);
@@ -91,7 +96,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 	void testExistsMultipleTrue() {
 		RosettaInterpreterBooleanValue expected = new RosettaInterpreterBooleanValue(true);
 		RosettaExpression expr = parser.parseExpression("[1,2,3] multiple exists");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterBooleanValue);
 		RosettaInterpreterBooleanValue castedVal = (RosettaInterpreterBooleanValue)val;
 		assertEquals(expected, castedVal);
@@ -101,7 +107,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 	void testExistsMultipleFalse() {
 		RosettaInterpreterBooleanValue expected = new RosettaInterpreterBooleanValue(false);
 		RosettaExpression expr = parser.parseExpression("[True] multiple exists");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterBooleanValue);
 		RosettaInterpreterBooleanValue castedVal = (RosettaInterpreterBooleanValue)val;
 		assertEquals(expected, castedVal);
@@ -114,7 +121,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 				new RosettaInterpreterError("Logical Operation: "
 						+ "Rightside is not of type Boolean"));
 		RosettaExpression expr = parser.parseExpression("(True and 1) single exists");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterErrorValue);
 		RosettaInterpreterErrorValue castedVal = (RosettaInterpreterErrorValue)val;
 		assertEquals(expected, castedVal);
@@ -124,7 +132,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 	void testIsAbsentTrue() {
 		RosettaInterpreterBooleanValue expected = new RosettaInterpreterBooleanValue(true);
 		RosettaExpression expr = parser.parseExpression("[] is absent");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterBooleanValue);
 		RosettaInterpreterBooleanValue castedVal = (RosettaInterpreterBooleanValue)val;
 		assertEquals(expected, castedVal);
@@ -134,7 +143,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 	void testIsAbsentFalse() {
 		RosettaInterpreterBooleanValue expected = new RosettaInterpreterBooleanValue(false);
 		RosettaExpression expr = parser.parseExpression("[True] is absent");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterBooleanValue);
 		RosettaInterpreterBooleanValue castedVal = (RosettaInterpreterBooleanValue)val;
 		assertEquals(expected, castedVal);
@@ -147,7 +157,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 				new RosettaInterpreterError("Logical Operation: "
 						+ "Rightside is not of type Boolean"));
 		RosettaExpression expr = parser.parseExpression("(True and 1) is absent");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterErrorValue);
 		RosettaInterpreterErrorValue castedVal = (RosettaInterpreterErrorValue)val;
 		assertEquals(expected, castedVal);
@@ -158,7 +169,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		RosettaInterpreterIntegerValue expected = 
 				new RosettaInterpreterIntegerValue(BigInteger.valueOf(0));
 		RosettaExpression expr = parser.parseExpression("[] count");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterIntegerValue);
 		RosettaInterpreterIntegerValue castedVal = (RosettaInterpreterIntegerValue)val;
 		assertEquals(expected, castedVal);
@@ -169,7 +181,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		RosettaInterpreterIntegerValue expected = 
 				new RosettaInterpreterIntegerValue(BigInteger.valueOf(3));
 		RosettaExpression expr = parser.parseExpression("[1, 2, 3] count");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterIntegerValue);
 		RosettaInterpreterIntegerValue castedVal = (RosettaInterpreterIntegerValue)val;
 		assertEquals(expected, castedVal);
@@ -182,7 +195,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 				new RosettaInterpreterError("Logical Operation: "
 						+ "Rightside is not of type Boolean"));
 		RosettaExpression expr = parser.parseExpression("(True and 1) count");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterErrorValue);
 		RosettaInterpreterErrorValue castedVal = (RosettaInterpreterErrorValue)val;
 		assertEquals(expected, castedVal);
@@ -194,7 +208,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 				new RosettaInterpreterErrorValue(
 				new RosettaInterpreterError("List is empty"));
 		RosettaExpression expr = parser.parseExpression("[] first");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterErrorValue);
 		RosettaInterpreterErrorValue castedVal = (RosettaInterpreterErrorValue)val;
 		assertEquals(expected, castedVal);
@@ -205,7 +220,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		RosettaInterpreterIntegerValue expected = 
 				new RosettaInterpreterIntegerValue(BigInteger.valueOf(3));
 		RosettaExpression expr = parser.parseExpression("[3, 4, 5] first");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterIntegerValue);
 		RosettaInterpreterIntegerValue castedVal = (RosettaInterpreterIntegerValue)val;
 		assertEquals(expected, castedVal);
@@ -218,7 +234,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 				new RosettaInterpreterError("Logical Operation: "
 						+ "Rightside is not of type Boolean"));
 		RosettaExpression expr = parser.parseExpression("(True and 1) first");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterErrorValue);
 		RosettaInterpreterErrorValue castedVal = (RosettaInterpreterErrorValue)val;
 		assertEquals(expected, castedVal);
@@ -230,7 +247,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 				new RosettaInterpreterErrorValue(
 				new RosettaInterpreterError("List is empty"));
 		RosettaExpression expr = parser.parseExpression("[] last");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterErrorValue);
 		RosettaInterpreterErrorValue castedVal = (RosettaInterpreterErrorValue)val;
 		assertEquals(expected, castedVal);
@@ -241,7 +259,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		RosettaInterpreterIntegerValue expected = 
 				new RosettaInterpreterIntegerValue(BigInteger.valueOf(5));
 		RosettaExpression expr = parser.parseExpression("[3, 4, 5] last");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterIntegerValue);
 		RosettaInterpreterIntegerValue castedVal = (RosettaInterpreterIntegerValue)val;
 		assertEquals(expected, castedVal);
@@ -254,7 +273,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 				new RosettaInterpreterError("Logical Operation: "
 						+ "Rightside is not of type Boolean"));
 		RosettaExpression expr = parser.parseExpression("(True and 1) last");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(val instanceof RosettaInterpreterErrorValue);
 		RosettaInterpreterErrorValue castedVal = (RosettaInterpreterErrorValue)val;
 		assertEquals(expected, castedVal);
@@ -265,7 +285,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "[1 ,2] distinct";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterListValue exp = new RosettaInterpreterListValue(
 				List.of(new RosettaInterpreterIntegerValue(1), 
 						new RosettaInterpreterIntegerValue(2)));
@@ -278,7 +299,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "[1 ,2, 2] distinct";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterListValue exp = new RosettaInterpreterListValue(
 				List.of(new RosettaInterpreterIntegerValue(1), 
 						new RosettaInterpreterIntegerValue(2)));
@@ -291,7 +313,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "[2, 2, 2, 2, 2, 2] distinct";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterListValue exp = new RosettaInterpreterListValue(
 				List.of(new RosettaInterpreterIntegerValue(2)));
 		
@@ -303,7 +326,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "[] distinct";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterListValue exp = new RosettaInterpreterListValue(
 				List.of());
 		
@@ -315,7 +339,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "1 distinct";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterListValue exp = new RosettaInterpreterListValue(
 				List.of(new RosettaInterpreterIntegerValue(1)));
 		
@@ -327,7 +352,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "[(1 and False), 2] distinct";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		
 		assertTrue(val instanceof RosettaInterpreterErrorValue);
 	}
@@ -337,7 +363,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "[1 ,2] reverse";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterListValue exp = new RosettaInterpreterListValue(
 				List.of(new RosettaInterpreterIntegerValue(2), 
 						new RosettaInterpreterIntegerValue(1)));
@@ -350,7 +377,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "1 reverse";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterListValue exp = new RosettaInterpreterListValue(
 				List.of(new RosettaInterpreterIntegerValue(1)));
 		
@@ -362,7 +390,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "[] reverse";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterListValue exp = new RosettaInterpreterListValue(
 				List.of());
 		
@@ -374,7 +403,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "[1 ,2, 3, 4, 5, 6] reverse";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterListValue exp = new RosettaInterpreterListValue(
 				List.of(new RosettaInterpreterIntegerValue(6),
 						new RosettaInterpreterIntegerValue(5),
@@ -391,7 +421,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "[(1 and False), 2] reverse";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		
 		assertTrue(val instanceof RosettaInterpreterErrorValue);
 	}
@@ -401,7 +432,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "[1 ,2] sum";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterNumberValue exp =
 				new RosettaInterpreterNumberValue(BigDecimal.valueOf(3));
 		
@@ -413,7 +445,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "2 sum";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterNumberValue exp =
 				new RosettaInterpreterNumberValue(BigDecimal.valueOf(2));
 		
@@ -425,7 +458,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "[2, 3.5, 0.1] sum";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		RosettaInterpreterNumberValue exp =
 				new RosettaInterpreterNumberValue(BigDecimal.valueOf(5.6));
 		
@@ -437,7 +471,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "[] sum";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		
 		assertTrue(val instanceof RosettaInterpreterErrorValue);
 	}
@@ -447,7 +482,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "[1, True, 3] sum";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		
 		assertTrue(val instanceof RosettaInterpreterErrorValue);
 	}
@@ -457,7 +493,8 @@ class RosettaInterpreterListOperatorInterpreterTest {
 		String expressionText = "[1, (1 and False), 3] sum";
 		RosettaExpression expr = parser.parseExpression(expressionText);
 		validation.assertNoIssues(expr);
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		
 		assertTrue(val instanceof RosettaInterpreterErrorValue);
 	}

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterBooleanValue;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterError;
 import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterErrorValue;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnvironmentTuple;
 import com.regnosys.rosetta.rosetta.expression.ExpressionFactory;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
 import com.regnosys.rosetta.rosetta.expression.impl.ExpressionFactoryImpl;
@@ -40,49 +41,56 @@ public class RosettaInterpreterEqualityTest {
 	@Test
 	public void equalityTrueTest() {
 		RosettaExpression expr = parser.parseExpression("1 = 1");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	
 	@Test
 	public void equalityFalseTest() {
 		RosettaExpression expr = parser.parseExpression("1 = 2");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertFalse(((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	
 	@Test
 	public void inequalityTrueTest() {
 		RosettaExpression expr = parser.parseExpression("1 <> 2");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	
 	@Test
 	public void equalityDifferentTypesTest() {
 		RosettaExpression expr = parser.parseExpression("1 = True");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertFalse(((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	
 	@Test
 	public void equalityAllTrueTest() {
 		RosettaExpression expr = parser.parseExpression("[1,1,1] all = 1");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	
 	@Test
 	public void equalityAllFalseTest() {
 		RosettaExpression expr = parser.parseExpression("[1,2,1] all = 1");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertFalse(((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	
 	@Test
 	public void equalityAnyFalseTest() {
 		RosettaExpression expr = parser.parseExpression("[2,2,2] any <> 2");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertFalse(((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	
@@ -92,7 +100,8 @@ public class RosettaInterpreterEqualityTest {
 				new RosettaInterpreterError(
 						"cannot compare two lists"));
 		RosettaExpression expr = parser.parseExpression("[1,2,2] any = [1]");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals(expectedError.getErrors().get(0).getMessage(),
 				((RosettaInterpreterErrorValue)val)
 					.getErrors().get(0).getMessage());
@@ -101,7 +110,8 @@ public class RosettaInterpreterEqualityTest {
 	@Test
 	public void equalityAnyTrueTest() {
 		RosettaExpression expr = parser.parseExpression("[1,2,3] any = 2");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertTrue(((RosettaInterpreterBooleanValue)val).getValue());
 	}
 	
@@ -113,7 +123,8 @@ public class RosettaInterpreterEqualityTest {
 								+ "to compare two elements"));
 		
 		RosettaExpression expr = parser.parseExpression("2 any = 2");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals(expectedError.getErrors(),
 				((RosettaInterpreterErrorValue)val).getErrors());
 	}
@@ -124,7 +135,8 @@ public class RosettaInterpreterEqualityTest {
 				new RosettaInterpreterError(
 						"cannot compare two lists"));
 		RosettaExpression expr = parser.parseExpression("[1,2,3] any = [1,2]");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals(expectedError.getErrors(),
 				((RosettaInterpreterErrorValue)val).getErrors());
 	}
@@ -136,7 +148,8 @@ public class RosettaInterpreterEqualityTest {
 						"cannot use \"ALL\" keyword "
 								+ "to compare two elements"));
 		RosettaExpression expr = parser.parseExpression("1 all = 3");
-		RosettaInterpreterValue val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals(expectedError.getErrors(),
 				((RosettaInterpreterErrorValue)val).getErrors());
 	}

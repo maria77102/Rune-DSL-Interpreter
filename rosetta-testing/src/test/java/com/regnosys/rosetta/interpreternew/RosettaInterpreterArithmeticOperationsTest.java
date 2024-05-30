@@ -10,6 +10,7 @@ import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterValueEnviron
 import com.regnosys.rosetta.rosetta.expression.ExpressionFactory;
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
 import com.regnosys.rosetta.rosetta.expression.impl.ExpressionFactoryImpl;
+import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
 import com.regnosys.rosetta.tests.RosettaInjectorProvider;
 import com.regnosys.rosetta.tests.util.ExpressionParser;
 import com.rosetta.model.lib.RosettaNumber;
@@ -43,136 +44,136 @@ public class RosettaInterpreterArithmeticOperationsTest {
 	@Test
 	public void plusTest() {
 		RosettaExpression expr = parser.parseExpression("1+2");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(3)),
-				((RosettaInterpreterNumberValue)
-				((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getValue());
+				((RosettaInterpreterNumberValue)val).getValue());
 	}
 	
 	@Test
 	public void compositePlusTest() {
 		RosettaExpression expr = parser.parseExpression("1+2+3");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(6)),
-				((RosettaInterpreterNumberValue)
-						((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getValue());
+				((RosettaInterpreterNumberValue)val).getValue());
 	}
 	
 	@Test
 	public void decimalPlusTest() {
 		RosettaExpression expr = parser.parseExpression("1.2 + 2.7");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(3.9)),
-				((RosettaInterpreterNumberValue)
-						((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getValue());
+				((RosettaInterpreterNumberValue)val).getValue());
 	}
 
 	@Test
 	public void minusTest() {
 		RosettaExpression expr = parser.parseExpression("1-2");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(-1)),
-				((RosettaInterpreterNumberValue)
-				((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getValue());
+				((RosettaInterpreterNumberValue)val).getValue());
 	}
 	
 	@Test
 	public void multiplyTest() {
 		RosettaExpression expr = parser.parseExpression("5*2");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(10)),
-				((RosettaInterpreterNumberValue)
-				((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getValue());
+				((RosettaInterpreterNumberValue)val).getValue());
 	}
 	
 	@Test
 	public void divideTest() {
 		RosettaExpression expr = parser.parseExpression("6/2");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals(RosettaNumber.valueOf(BigDecimal.valueOf(3)),
-				((RosettaInterpreterNumberValue)
-				((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getValue());
+				((RosettaInterpreterNumberValue)val).getValue());
 	}
 
 	@Test
 	public void stringConcatenationTest() {
 		RosettaExpression expr = parser.parseExpression("\"Hello \" + \"World\"");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals("Hello World", 
-				((RosettaInterpreterStringValue)
-				((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getValue());
+				((RosettaInterpreterStringValue)val).getValue());
 	}
 	
 	@Test
 	public void correctTypesMixedTest() {
 		RosettaExpression expr = parser.parseExpression("\"Hello \" + 5");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals("The terms of the operation "
 				+ "are neither both strings nor both numbers", 
-				((RosettaInterpreterErrorValue)
-				((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getErrors()
+				((RosettaInterpreterErrorValue)val).getErrors()
 				.get(0).getMessage());
 	}
 	
 	@Test
 	public void correctTypesMixedTestTheOtherWay() {
 		RosettaExpression expr = parser.parseExpression("5 + \"Hello\"");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals("The terms of the operation "
 				+ "are neither both strings nor both numbers", 
-				((RosettaInterpreterErrorValue)
-				((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getErrors()
+				((RosettaInterpreterErrorValue)val).getErrors()
 				.get(0).getMessage());
 	}
 	
 	@Test
 	public void stringConcatenationErrorTest() {
 		RosettaExpression expr = parser.parseExpression("\"Hello \" - \"World\"");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals("The terms are strings but the operation "
 				+ "is not concatenation: not implemented", 
-				((RosettaInterpreterErrorValue)
-				((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getErrors()
+				((RosettaInterpreterErrorValue)val).getErrors()
 				.get(0).getMessage());
 	}
 	
 	@Test
 	public void wrongTypeLeftTest() {
 		RosettaExpression expr = parser.parseExpression("True - \"World\"");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
-		assertEquals("Arithmetic Operation: Leftside is not of type Number/String", 
-				((RosettaInterpreterErrorValue)
-				((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getErrors()
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
+		assertEquals("Arithmetic Operation: Leftside is not of type Number/String",
+				((RosettaInterpreterErrorValue)val).getErrors()
 				.get(0).getMessage());
 	}
 	
 	@Test
 	public void wrongTypeRightTestString() {
 		RosettaExpression expr = parser.parseExpression("\"Hello \" + True");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
-		assertEquals("Arithmetic Operation: Rightside is not of type Number/String", 
-				((RosettaInterpreterErrorValue)
-				((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getErrors()
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
+		assertEquals("Arithmetic Operation: Rightside is not of type Number/String",
+				((RosettaInterpreterErrorValue)val).getErrors()
 				.get(0).getMessage());
 	}
 	
 	@Test
 	public void wrongTypeRightTestInteger() {
 		RosettaExpression expr = parser.parseExpression("2 + True");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals("Arithmetic Operation: Rightside is not of type Number/String", 
-				((RosettaInterpreterErrorValue)
-				((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getErrors()
+				((RosettaInterpreterErrorValue)val).getErrors()
 				.get(0).getMessage());
 	}
 	
 	@Test
 	public void wrongTypeRightTestNumber() {
 		RosettaExpression expr = parser.parseExpression("2.5 + True");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
-		assertEquals("Arithmetic Operation: Rightside is not of type Number/String", 
-				((RosettaInterpreterErrorValue)
-				((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getErrors()
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
+		assertEquals("Arithmetic Operation: Rightside is not of type Number/String",
+				((RosettaInterpreterErrorValue)val).getErrors()
 				.get(0).getMessage());
 	}
 	
@@ -180,11 +181,11 @@ public class RosettaInterpreterArithmeticOperationsTest {
 	public void leftsideErrorTest() {
 		RosettaExpression expr = parser
 				.parseExpression("\"Hello \" - \"World\" + \"World\"");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		assertEquals("The terms are strings but the "
 				+ "operation is not concatenation: not implemented", 
-				((RosettaInterpreterErrorValue)
-				((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getErrors()
+				((RosettaInterpreterErrorValue)val).getErrors()
 				.get(0).getMessage());
 	}
 	
@@ -192,7 +193,8 @@ public class RosettaInterpreterArithmeticOperationsTest {
 	public void complexTest() {
 		RosettaExpression expr = parser
 				.parseExpression("(\"Hello \" - \"World\") + (2 + ([1, 2] any > 0))");
-		RosettaInterpreterValueEnvironmentTuple val = interpreter.interp(expr);
+		RosettaInterpreterValue val = ((RosettaInterpreterValueEnvironmentTuple)
+				interpreter.interp(expr)).getValue();
 		List<RosettaInterpreterError> expected = List.of(
 				new RosettaInterpreterError(
 						"The terms are strings but the operation "
@@ -202,7 +204,6 @@ public class RosettaInterpreterArithmeticOperationsTest {
 						 + "is not of type Number/String")
 					);
 		assertEquals(expected, 
-				((RosettaInterpreterErrorValue)
-				((RosettaInterpreterValueEnvironmentTuple)val).getValue()).getErrors());
+				((RosettaInterpreterErrorValue)val).getErrors());
 	}
 }

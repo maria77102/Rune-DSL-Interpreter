@@ -19,6 +19,12 @@ public class RosettaInterpreterNew {
 	 * @return value of RosettaIntLiteral otherwise exception
 	 */
 	
+	public RosettaInterpreterValueEnvironmentTuple interp(RosettaExpression expression, 
+			RosettaInterpreterEnvironment env) {
+		return (RosettaInterpreterValueEnvironmentTuple)
+				expression.accept(visitor, env);	
+	}
+	
 	public RosettaInterpreterValueEnvironmentTuple interp(RosettaExpression expression) {
 		return (RosettaInterpreterValueEnvironmentTuple)
 				expression.accept(visitor, new RosettaInterpreterEnvironment());	
