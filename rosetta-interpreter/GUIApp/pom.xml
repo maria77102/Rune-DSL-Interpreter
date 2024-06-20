@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.regnosys.rosetta</groupId>
+        <artifactId>com.regnosys.rosetta.interpreternew</artifactId>
+        <version>0.0.0.main-SNAPSHOT</version>
+        <relativePath>../com.regnosys.rosetta.interpreternew/pom.xml</relativePath> <!-- Adjust this relative path as necessary -->
+    </parent>
+
+    <artifactId>gui-app</artifactId>
+    <name>GUI Application</name>
+    <packaging>jar</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        
+        <dependency>
+		    <groupId>javax.inject</groupId>
+		    <artifactId>javax.inject</artifactId>
+		    <version>1</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.google.inject</groupId>
+		    <artifactId>guice</artifactId>
+	    </dependency>
+		        
+        
+        
+        <!-- Project-specific dependencies -->
+		<dependency>
+	        <groupId>com.regnosys.rosetta</groupId>
+	        <artifactId>com.regnosys.rosetta.lib</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+	    	<groupId>com.regnosys.rosetta</groupId>
+	    	<artifactId>com.regnosys.rosetta</artifactId>
+	    	<version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+	    	<groupId>com.regnosys.rosetta</groupId>
+	    	<artifactId>com.regnosys.rosetta.tests</artifactId>
+	    	<version>${project.version}</version>
+	    </dependency>
+	    
+	    <dependency>
+			<groupId>org.eclipse.xtext</groupId>
+			<artifactId>org.eclipse.xtext.testing</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xtext</groupId>
+			<artifactId>org.eclipse.xtext.xbase.testing</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mdkt.compiler</groupId>
+			<artifactId>InMemoryJavaCompiler</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.assertj</groupId>
+		    <artifactId>assertj-core</artifactId>
+		    <version>3.24.2</version>
+		</dependency>
+    </dependencies>
+
+    <build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>xtend-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
