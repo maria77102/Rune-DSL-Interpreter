@@ -11,29 +11,122 @@
 
 
     <!-- Your rules will come here -->
+    
+    <!--  BEST PRACTICES RULES -->
     <rule ref="category/java/bestpractices.xml">
+    	<exclude name = "AvoidMessageDigestField" />
+    	<exclude name = "AvoidUsingHardCodedIP" />
+    	<exclude name = "CheckResultSet" />
+    	<exclude name = "DoubleBraceInitialization" />
+    	<exclude name = "GuardLogStatement" />
+    	<exclude name = "JUnit4SuitesShouldUseSuiteAnnotation" />
+    	<exclude name = "JUnit4TestShouldUseAfterAnnotation" />
+    	<exclude name = "JUnit4TestShouldUseBeforeAnnotation" />
+    	<exclude name = "JUnit4TestShouldUseTestAnnotation" />
+    	<exclude name = "JUnitAssertionsShouldIncludeMessage" />
+    	<exclude name = "MethodReturnsInternalArray" />
+    	<exclude name = "PreserveStackTrace" />
+    	<exclude name = "PrimitiveWrapperInstantiation" />
+    	<exclude name = "ReplaceEnumerationWithIterator" />
+    	<exclude name = "UnnecessaryVarargsArrayCreation" />
+    	<exclude name = "UnusedFormalParameter" />
+    	<exclude name = "UseStandardCharsets" />
+    	<exclude name = "UseTryWithResources" />
+    	<exclude name = "UseVarargs" />
     </rule>
     
-    <rule ref="category/java/codestyle.xml">
-    	<exclude name = "MethodArgumentCouldBeFinal" />
-    	<exclude name = "OnlyOneReturn" />
-    	<exclude name = "AtLeastOneConstructor" />
-    </rule>
     
-    <rule ref="category/java/design.xml">
-    </rule>
+    <!--  CODE STYLE RULES -->
+    <rule ref="category/java/codestyle.xml/AvoidDollarSign" />
+    <rule ref="category/java/codestyle.xml/BooleanGetMethodName" />
+    <rule ref="category/java/codestyle.xml/CallSuperInConstructor" />
+    <rule ref="category/java/codestyle.xml/ClassNamingConventions" />
+    <rule ref="category/java/codestyle.xml/ConfusingTernary" />
+    <rule ref="category/java/codestyle.xml/ControlStatementBraces" />
+    <rule ref="category/java/codestyle.xml/EmptyControlStatement" />
+    <rule ref="category/java/codestyle.xml/FieldDeclarationsShouldBeAtStartOfClass" />
+    <rule ref="category/java/codestyle.xml/FieldNamingConventions" />
+    <rule ref="category/java/codestyle.xml/ForLoopShouldBeWhileLoop" />
+    <rule ref="category/java/codestyle.xml/GenericsNaming" />
+    <rule ref="category/java/codestyle.xml/LocalVariableNamingConventions" />
+    <rule ref="category/java/codestyle.xml/LongVariable" />
+    <rule ref="category/java/codestyle.xml/NoPackage" />
+    <rule ref="category/java/codestyle.xml/PrematureDeclaration" />
+    <rule ref="category/java/codestyle.xml/ShortClassName" />
+    <rule ref="category/java/codestyle.xml/ShortMethodName" />
+    <rule ref="category/java/codestyle.xml/ShortVariable" />
+    <rule ref="category/java/codestyle.xml/UnnecessaryCast" />
+    <rule ref="category/java/codestyle.xml/UnnecessaryImport" />
+    <rule ref="category/java/codestyle.xml/UnnecessaryLocalBeforeReturn" />
+    <rule ref="category/java/codestyle.xml/UnnecessaryReturn" />
+    <rule ref="category/java/codestyle.xml/UnnecessarySemicolon" />
+    <rule ref="category/java/codestyle.xml/UselessParentheses" />
+    <rule ref="category/java/codestyle.xml/UselessQualifiedThis" />
+    <rule ref="category/java/codestyle.xml/UseShortArrayInitializer" />
     
+    
+    
+    <!--  DESIGN RULES -->
+    <rule ref="category/java/design.xml/AbstractClassWithoutAnyMethod" />
+    <rule ref="category/java/design.xml/AvoidCatchingGenericException" />
+    <rule ref="category/java/design.xml/AvoidDeeplyNestedIfStmts" />
+    <rule ref="category/java/design.xml/AvoidThrowingNullPointerException" />
+    <rule ref="category/java/design.xml/CouplingBetweenObjects" />
+    <rule ref="category/java/design.xml/CyclomaticComplexity" />
+    <rule ref="category/java/design.xml/ExcessiveParameterList" />
+    <rule ref="category/java/design.xml/ImmutableField" />
+    <rule ref="category/java/design.xml/LawOfDemeter" />
+    <rule ref="category/java/design.xml/NcssCount" />
+    <rule ref="category/java/design.xml/NPathComplexity" />
+    <rule ref="category/java/design.xml/SimplifyBooleanExpressions" />
+    <rule ref="category/java/design.xml/SimplifyBooleanReturns" />
+    <rule ref="category/java/design.xml/SimplifyConditional" />
+    <rule ref="category/java/design.xml/SingularField" />
+    <rule ref="category/java/design.xml/SwitchDensity" />
+    <rule ref="category/java/design.xml/TooManyFields" />
+    <rule ref="category/java/design.xml/TooManyMethods" />
+    <rule ref="category/java/design.xml/UselessOverridingMethod" />
+    
+   
+    <!--  ERROR PRONE RULES -->
+    <rule ref="category/java/errorprone.xml/AvoidBranchingStatementAsLastInLoop" />
+    <rule ref="category/java/errorprone.xml/AvoidDuplicateLiterals" />
+    <rule ref="category/java/errorprone.xml/AvoidFieldNameMatchingMethodName" />
+    <rule ref="category/java/errorprone.xml/AvoidFieldNameMatchingTypeName" />
+    <rule ref="category/java/errorprone.xml/CallSuperFirst" />
+    <rule ref="category/java/errorprone.xml/CompareObjectsWithEquals" />
+    <rule ref="category/java/errorprone.xml/DoNotExtendJavaLangThrowable" />
+    <rule ref="category/java/errorprone.xml/EqualsNull" />
+    <rule ref="category/java/errorprone.xml/ImplicitSwitchFallThrough" />
+    <rule ref="category/java/errorprone.xml/JUnitSpelling" />
+    <rule ref="category/java/errorprone.xml/NullAssignment" />
+    <rule ref="category/java/errorprone.xml/OverrideBothEqualsAndHashcode" />
+    <rule ref="category/java/errorprone.xml/SuspiciousEqualsMethodName" />
+    <rule ref="category/java/errorprone.xml/SuspiciousHashcodeMethodName" />
+    <rule ref="category/java/errorprone.xml/TestClassWithoutTestCases" />
+    <rule ref="category/java/errorprone.xml/UnconditionalIfStatement" />
+    <rule ref="category/java/errorprone.xml/UnnecessaryBooleanAssertion" />
+    <rule ref="category/java/errorprone.xml/UnusedNullCheckInEquals" />
+    <rule ref="category/java/errorprone.xml/UseEqualsToCompareStrings" />
+   
+   
+    <!--  PERFORMANCE RULES -->
+    <rule ref="category/java/performance.xml/AvoidArrayLoops" />
+    <rule ref="category/java/performance.xml/AvoidInstantiatingObjectsInLoops" />
+    <rule ref="category/java/performance.xml/BigIntegerInstantiation" />
+    <rule ref="category/java/performance.xml/StringInstantiation" />
+    <rule ref="category/java/performance.xml/StringToString" />
+    <rule ref="category/java/performance.xml/TooFewBranchesForASwitchStatement" />
+    <rule ref="category/java/performance.xml/UseArrayListInsteadOfVector" />
+    <rule ref="category/java/performance.xml/UseArraysAsList" />
+    
+    <!--  DOCUMENTATION RULES -->
     <rule ref="category/java/documentation.xml">
+    	<exclude name = "CommentContent" />
     	<exclude name = "CommentRequired" />
-    </rule>
-    
-    <rule ref="category/java/errorprone.xml">
-    </rule>
-    
-    <rule ref="category/java/performance.xml">
-    </rule>
-    
-    <rule ref="category/java/security.xml">
+    	<exclude name = "CommentSize" />
+    	<exclude name = "UncommentedEmptyConstructor" />
+    	<exclude name = "UncommentedEmptyMethodBody" />
     </rule>
     
 

@@ -18,6 +18,7 @@
     <maven.compiler.target>1.7</maven.compiler.target>
     <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
     <checkstyle.config.location>checkstyle-SP.xml</checkstyle.config.location>
+    <skip.pmd.check>false</skip.pmd.check>
   </properties>
 
   <dependencies>
@@ -118,6 +119,15 @@
 	            </sourceDirectories>
 	        </configuration>
        </plugin>
+       <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <configuration>
+                <rulesets>
+                    <ruleset>PMDconfig.xml</ruleset>
+                </rulesets>
+            </configuration>
+        </plugin>
        <!-- My Plugins END-->
 	</plugins>
   </build>
