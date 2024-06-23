@@ -22,6 +22,7 @@ public class StartWindow {
 	
 	
 	String example_1 = 
+			"";
 	
     private JFrame frame;
 
