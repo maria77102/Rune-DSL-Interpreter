@@ -22,7 +22,18 @@ public class StartWindow {
 	
 	
 	String example_1 = 
-			"";
+			  "type Foo:\n" 
+	        + "    bar Bar (0..*)\n" 
+	        + "    baz Baz (0..1)\n"
+	        + "\n"
+	        + "type Bar:\n" 
+	        + "    before number (0..1)\n"
+	        + "    after number (0..1)\n"
+	        + "    another number (0..1)\n"
+	        + "\n"
+	        + "type Baz:\n"
+	        + "    bazValue number (0..1)\n"
+	        + "    other number (0..1)\n";
 	
     private JFrame frame;
 
