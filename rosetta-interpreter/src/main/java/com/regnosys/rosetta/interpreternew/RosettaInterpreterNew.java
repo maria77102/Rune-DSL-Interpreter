@@ -9,6 +9,7 @@ import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterBaseEnvironmen
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
 import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
 import com.regnosys.rosetta.rosetta.simple.Function;
+import com.regnosys.rosetta.rosetta.simple.impl.FunctionImpl;
 import com.regnosys.rosetta.rosetta.simple.Data;
 
 public class RosettaInterpreterNew {
@@ -37,7 +38,7 @@ public class RosettaInterpreterNew {
 	 * @return value of RosettaExpression otherwise exception
 	 */
 	public RosettaInterpreterValue interp(RosettaExpression expression, 
-			RosettaInterpreterBaseEnvironment env) {
+			RosettaInterpreterEnvironment env) {
 		return expression.accept(visitor, env);	
 	}
 
@@ -117,5 +118,14 @@ public class RosettaInterpreterNew {
 		environment = (RosettaInterpreterEnvironment) expression.accept(visitor, environment);
 		
 		return environment;	
+	}
+
+	public RosettaInterpreterEnvironment interp(FunctionImpl func) {
+		return (RosettaInterpreterEnvironment) func.accept(visitor, environment);
+	}
+	
+	public RosettaInterpreterEnvironment interp(FunctionImpl func, 
+			RosettaInterpreterBaseEnvironment env) {
+		return (RosettaInterpreterEnvironment) func.accept(visitor, env);
 	}
 }

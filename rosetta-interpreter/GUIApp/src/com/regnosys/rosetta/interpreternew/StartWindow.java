@@ -1,10 +1,15 @@
+package com.regnosys.rosetta.interpreternew;
+
 import com.google.inject.Injector;
 import com.regnosys.rosetta.tests.util.ExpressionParser;
 import com.regnosys.rosetta.tests.util.ModelHelper;
 import com.regnosys.rosetta.RosettaStandaloneSetup;
-import com.regnosys.rosetta.interpreternew.RosettaInterpreterNew;
-import com.regnosys.rosetta.rosetta.expression.RosettaExpression;
+import com.regnosys.rosetta.interpreternew.values.RosettaInterpreterEnvironment;
+import com.regnosys.rosetta.rosetta.RosettaModel;
+import com.regnosys.rosetta.rosetta.expression.impl.RosettaSymbolReferenceImpl;
+//import com.regnosys.rosetta.interpreternew.RosettaInterpreterNew;
 import com.regnosys.rosetta.rosetta.interpreter.RosettaInterpreterValue;
+import com.regnosys.rosetta.rosetta.simple.impl.FunctionImpl;
 
 import javax.swing.*;
 
@@ -20,20 +25,25 @@ public class StartWindow {
 	ModelHelper modelHelper = injector.getInstance(ModelHelper.class);
 	RosettaInterpreterNew interpreter = injector.getInstance(RosettaInterpreterNew.class); 
 	
+	RosettaInterpreterVisitor visitor = injector.getInstance(RosettaInterpreterVisitor.class);
+	RosettaInterpreterEnvironment environment = injector.getInstance(RosettaInterpreterEnvironment.class);
+	
 	
 	String example_1 = 
-			  "type Foo:\n" 
-	        + "    bar Bar (0..*)\n" 
-	        + "    baz Baz (0..1)\n"
-	        + "\n"
-	        + "type Bar:\n" 
-	        + "    before number (0..1)\n"
-	        + "    after number (0..1)\n"
-	        + "    another number (0..1)\n"
-	        + "\n"
-	        + "type Baz:\n"
-	        + "    bazValue number (0..1)\n"
-	        + "    other number (0..1)\n";
+			  "func Add:\n"
+			+ "  inputs:\n"
+			+ "    a number (1..1)\n"
+			+ "    b int (1..1)\n"
+			+ "  output:\n"
+			+ "    result number (1..10)\n\n"
+			+ "  alias bee: b\n"
+			+ "  set result:\n"
+			+ "    a + bee\n\n"
+			+ "func MyTest:\n"
+			+ "  output:\n"
+			+ "    result number (1..10)\n"
+			+ "  set result:\n"
+			+ "    Add(2.0, 1.0)\n";
 	
     private JFrame frame;
 
@@ -69,6 +79,7 @@ public class StartWindow {
 
         // Text area for code input
         JTextArea codeTextArea = new JTextArea();
+        codeTextArea.setFont(new Font("Cascadia Code", Font.PLAIN, 13));
         codeTextArea.setRows(31);
         codeScrollPane.setViewportView(codeTextArea);
 
@@ -106,7 +117,12 @@ public class StartWindow {
         exampleButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		String chosenExample = tests.getSelectedItem().toString();
-        		
+        		switch(chosenExample) {
+        			case "Example 1":
+        				codeTextArea.setText(example_1);
+        			default:
+        				break;
+        		}	
         	}
         });
         exampleButton.setBounds(221, 93, 125, 26);
@@ -121,14 +137,19 @@ public class StartWindow {
                 // Get the code from the codeTextArea
                 String code = codeTextArea.getText();
 
-                // Placeholder for interpreter logic
-                // You need to implement the actual interpreter and replace this code
-                RosettaExpression expr = parser.parseExpression(code);
-
-                RosettaInterpreterValue result = interpreter.interp(expr);
-
-                System.out.println(result);
-                // Display the result in the resultTextArea
+//                RosettaExpression expr = parser.parseExpression(code);
+                RosettaModel model = modelHelper.parseRosettaWithNoErrors(code);
+                FunctionImpl function = (FunctionImpl) model.getElements().get(0);
+            	RosettaSymbolReferenceImpl ref = (RosettaSymbolReferenceImpl) 
+            			((FunctionImpl)model.getElements().get(1)).getOperations().get(0).getExpression();
+            	RosettaInterpreterEnvironment env = 
+            			(RosettaInterpreterEnvironment) interpreter.interp(function);
+//            	RosettaInterpreterEnvironment env = (RosettaInterpreterEnvironment) function.accept(visitor, environment);
+//            	RosettaInterpreterEnvironment env = (RosettaInterpreterEnvironment) visitor.interp(function, environment);
+            	RosettaInterpreterValue result = interpreter.interp(ref, env);
+            	System.out.println(function.getClass().getName());
+//                System.out.println(result);
+//                 Display the result in the resultTextArea
                 resultTextArea.setText(result.toString());
             }
         });

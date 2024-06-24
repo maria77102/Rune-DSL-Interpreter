@@ -90,7 +90,6 @@ class Function extends RootElement, RosettaNamed, RosettaCallableWithArgs, Refer
 		inputs.size
 	}
 	
-	
 	op RosettaInterpreterBaseEnvironment accept(InterpreterVisitor v, RosettaInterpreterBaseEnvironment nv) {
 		v.interp(this,nv)
 	}
