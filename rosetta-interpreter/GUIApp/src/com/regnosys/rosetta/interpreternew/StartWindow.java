@@ -144,10 +144,8 @@ public class StartWindow {
             			((FunctionImpl)model.getElements().get(1)).getOperations().get(0).getExpression();
             	RosettaInterpreterEnvironment env = 
             			(RosettaInterpreterEnvironment) interpreter.interp(function);
-//            	RosettaInterpreterEnvironment env = (RosettaInterpreterEnvironment) function.accept(visitor, environment);
-//            	RosettaInterpreterEnvironment env = (RosettaInterpreterEnvironment) visitor.interp(function, environment);
             	RosettaInterpreterValue result = interpreter.interp(ref, env);
-            	System.out.println(function.getClass().getName());
+//            	System.out.println(function.getClass().getName());
 //                System.out.println(result);
 //                 Display the result in the resultTextArea
                 resultTextArea.setText(result.toString());
